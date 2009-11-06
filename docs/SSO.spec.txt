@@ -1,0 +1,28 @@
+Single Log Out...
+------------------------------
+1.Create a function that allows you to logout by giving
+  1.username
+  2.sessionid
+  
+  how to:
+   just delete the row in the #__session corresponding to above under client_id =0
+   
+2.Create a function to look up login-state by giving
+  1.sessionid
+  
+  returns
+  ------------
+  username if exists or null.
+  
+  how to:
+  ----------
+  just look at the #_session table for given sessionid and return results..
+  
+
+Use of above
+-----------------------
+#1 function can be used to logout speadly from exApp insted of doing some redirection...
+#2 function can be used to loggin status of logged in user of the exApp for 
+   page refreshes using AJAX...
+     if user is null just call logout...
+     if not just call jconnect login...
