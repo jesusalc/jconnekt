@@ -2,11 +2,11 @@
 <project name="JConnect" basedir="." default="package">
 
 	<property name="src" value="." />
-	<property name="core" value="${src}/core" />
+	<property name="core" value="${src}/core-engine" />
 	<property name="joomla" value="../joomla" /> 
 	<property name="elgg" value="../elgg" /> 
 	<property name="dist" value="../dist" /> 
-	<property name="extensionDir" value="core/component/admin/ext" />
+	<property name="extensionDir" value="${core}/component/admin/ext" />
 
 	<fileset dir="${src}" id="whole">
 		<include name="**" />
@@ -59,9 +59,6 @@
 		</copy>
 		<copy todir="${joomla}/plugins/system">
 			<fileset refid="system-plugin" />
-		</copy>
-		<copy todir="${joomla}/plugins/authentication">
-			<fileset refid="auth-plugin" /> 
 		</copy>
 		<copy todir="${joomla}/modules/mod_jconnect_activity">
 			<fileset refid="mod-activity" />
