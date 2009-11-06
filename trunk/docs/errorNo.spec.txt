@@ -1,0 +1,14 @@
+These Error Numbers and there semantics should be used in calling xmlrpc methods..
+--------------------------------------------------------------------------------------
+
+1 -AppName or Secret Key Invalid
+2 -method parameter related errors (not the content of there)
+4 -Database errors
+8 -user name conflicts..
+16 -user not synced
+32 -IP invalid=
+64 -Not Allowed to Enter (Enability..)
+128 -PHP and Library,Class Based Errors..
+256- InValid Data Passed
+512- User Banned!
+1024- Not Implemented
