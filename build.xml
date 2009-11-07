@@ -11,38 +11,46 @@
 	<fileset dir="${src}" id="whole">
 		<include name="**" />
 		<exclude name="**/.*" />
+		<exclude name="**/Test*" />
 	</fileset>
 	<fileset dir="${core}/component" id="whole-comp">
 		<include name="**" />
 		<exclude name="**/.*" />
+		<exclude name="**/Test*" />
 	</fileset>   
 	<fileset dir="${core}/component/admin" id="admin-comp">
 		<include name="**" />
 		<exclude name="**/.*" />  
+		<exclude name="**/Test*" />
 	</fileset> 
 	<fileset dir="${core}/component/site" id="site-comp">
-		<include name="**" /> 
+		<include name="**" />
+		<exclude name="**/Test*" /> 
 	</fileset>
 	<fileset dir="${core}/plugins/user" id="user-plugin">
 		<include name="**" />
-		<exclude name="**/.*" />
+		<exclude name="**/Test*" />
 	</fileset>
 	<fileset dir="${core}/plugins/system" id="system-plugin">
 		<include name="**" />
 		<exclude name="**/.*" />
+		<exclude name="**/Test*" />
 	</fileset>
 	<fileset dir="${core}/modules/activity" id="mod-activity">
 		<include name="**" />
 		<exclude name="**/.*" />
+		<exclude name="**/Test*" />
 	</fileset>
 	<fileset dir="${src}/exApps/elgg_jconnect" id="elggApp">
 		<include name="**" />
 		<exclude name="**/.*" />
+		<exclude name="**/Test*" />
 	</fileset>
 
 	<fileset dir="${src}/exApps" id="elgg-dist">
 		<include name="elgg_jconnect/**" /> 
 		<exclude name="**/.svn" />
+		<exclude name="**/Test*" />
 	</fileset>
 
 	<!-- Copy Target -->
