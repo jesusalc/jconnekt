@@ -7,8 +7,6 @@
 * @license 		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
 */
 
-include_once('xmlrpc/xmlrpc.inc.php');
-include_once('xmlrpc/xmlrpcs.inc.php');
 include_once('aes-lib.php');
 
 class Joomla{
