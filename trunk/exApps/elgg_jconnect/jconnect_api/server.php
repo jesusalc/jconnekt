@@ -7,71 +7,60 @@
 * @license 		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
 */
 
-include_once('xmlrpc/xmlrpc.inc.php');
-include_once('xmlrpc/xmlrpcs.inc.php');
-
 include_once('lib.php');
 include_once('settings.php');
 
-global $xmlrpcString,$xmlrpcInt,$xmlrpcArray,$xmlrpcStruct,$xmlrpcBoolean;
-$methods=array(
-			"jc.deleteUser"=>array(
-				'function' => 'deleteUser',
-				'signature' => array(array($xmlrpcString,$xmlrpcString,$xmlrpcString)),
-				'docstring'=>'delete the given user'
-			),
-			"jc.getUserDetails"=>array(
-				'function' => 'getUserDetails',
-				'signature' => array(array($xmlrpcString,$xmlrpcString,$xmlrpcInt,$xmlrpcInt)),
-				'docstring'=>'return the usernames by the chunk size and chunk number'
-			),
-			"jc.getUsers"=>array(
-				'function' => 'getUsers',
-				'signature' => array(array($xmlrpcString,$xmlrpcString,$xmlrpcArray)),
-				'docstring'=>'return users as array given in the user array\n' .
-							'\nif userarray is null return all users.. '
-			),
-			"jc.getUserCount"=>array(
-				'function' => 'getUserCount',
-				'signature' => array(array($xmlrpcString,$xmlrpcString)),
-				'docstring'=>'get the # of users'
-			),
-			"jc.getPublicView"=>array(
-				'function' => 'getPublicView',
-				'signature' => array(array($xmlrpcString,$xmlrpcString)),
-				'docstring'=>'get the html data for activity module(public)'
-			),
-			"jc.getPrivateView"=>array(
-				'function' => 'getPrivateView',
-				'signature' => array(array($xmlrpcString,$xmlrpcString,$xmlrpcString)),
-				'docstring'=>'get the html data for activity module(private)'
-			),
-			"jc.loadSysInfo"=>array(
-				'function' => 'loadSysInfo',
-				'signature' => array(array($xmlrpcString,$xmlrpcString,$xmlrpcStruct)),
-				'docstring'=>'send jconenct system info to the exApp'
-			),
-			"jc.getUserGroups"=>array(
-				'function' => 'getUserGroups',
-				'signature' => array(array($xmlrpcString,$xmlrpcString)),
-				'docstring'=>'get usergroups used in elgg'
-			)
+class Endpoint{
+	//runs the endpoint
+	static function run(){
+		$registeredActions=array(
+			'deleteUser','getUserCount','getUserDetails',
+			'getUsers','loadSysInfo','getPublicView',
+			'getPrivateView','getUserGroups'
 		);
+		$action=get_input('action');
+		
+		if($action && in_array($action,$registeredActions)){
+			$data=json_decode(stripslashes(get_input('json')),true);
+			try{
+				$action($data);
+			}
+			catch(Exception $ex){
+				Endpoint::returnException(256,$ex->getMessage());
+			}
+		}
+		else{
+			Endpoint::returnException(2,'Invalid Action');
+		}
+	}
+	
+	//return result to the endpoint
+	/**
+	 * @param $result - result as an array
+	 */
+	static function returnResult($result){
+		$res=array('result'=>0,'data'=>$result);
+		echo json_encode($res);
+		exit(0);
+	}
+	
+	//return an exception to the endpoint
+	static function returnException($no,$message){
+		$res=array('result'=>1,'data'=>array('no'=>$no,'message'=>$message));
+		echo json_encode($res);
+		exit(0);
+	}
+	
+}
 
-$xmlrpcServer = new xmlrpc_server($methods, false);
-
-$xmlrpcServer->functions_parameters_type = 'phpvals';
-
-$xmlrpcServer->service();
-
-function deleteUser($secKey,$username){
+function deleteUser($data){
+	$secKey=$data['hmacHash'];
+	$username=$data['username'];
 	if(!checkValidity($secKey,array($username))){
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault(125,"Secret key invalid!")));
+		Endpoint::returnException(125,"Secret key invalid!");
 	}
 	else if(!$username){
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault(126,"username should be valid")));
+		Endpoint::returnException(126,"username should be valid");
 	}
 	$res=false;
 	try{
@@ -80,12 +69,10 @@ function deleteUser($secKey,$username){
 	}
 	catch(Exception $ex){
 		$errNo=($ex->getCode())?$ex->getCode():127;
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault($errNo,$ex->getMessage())));
+		Endpoint::returnException($errNo,$ex->getMessage());
 	}
 	
-	return new xmlrpcresp(php_xmlrpc_encode(
-		send_hmac(true)));
+	Endpoint::returnResult(true);
 		
 }
 
@@ -95,21 +82,19 @@ function deleteUser($secKey,$username){
  * Returns the # of users in ExApp
  * @return user count
  */
-function getUserCount($secKey){
+function getUserCount($data){
+	$secKey=$data['hmacHash'];
 	if(!checkValidity($secKey,array())){
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault(125,"Secret key invalid!")));
+		Endpoint::returnException(125,"Secret key invalid!");
 	}
 	
 	try{
 		if(!JCFactory::$userSync) throw new Exception("Not Implemented",1024);
 		$res=JCFactory::$userSync->getUserCount();
-		return new xmlrpcresp(php_xmlrpc_encode(
-			send_hmac((int)$res->cnt)));
+		Endpoint::returnResult((int)$res->cnt);
 	}catch(Exception $ex){
 		$errNo=($ex->getCode())?$ex->getCode():127;
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault($errNo,$ex->getMessage())));
+		Endpoint::returnException($errNo,$ex->getMessage());
 	}
 	
 	
@@ -124,22 +109,23 @@ function getUserCount($secKey){
 		eg: rtn[$lc][0]='username';
 			rtn[$lc][1]='email';
  */
-function getUserDetails($secKey,$chunkSize,$chunkNo){
+function getUserDetails($data){
+	$secKey=$data['hmacHash'];
+	$chunkSize=$data['chunkSize'];
+	$chunkNo=$data['chunkNo'];
+	
 	if(!checkValidity($secKey,array($chunkSize,$chunkNo))){
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault(125,"Secret key invalid!")));
+		Endpoint::returnException(125,"Secret key invalid!");
 	}
 	else{
 		try{
 			if(!JCFactory::$userSync) throw new Exception("Not Implemented",1024);
 			$res=JCFactory::$userSync->getUserDetails($chunkSize,$chunkNo);
-			return new xmlrpcresp(php_xmlrpc_encode(
-				send_hmac($res)));
+			Endpoint::returnResult($res);
 		}
 		catch(Exception $ex){
 			$errNo=($ex->getCode())?$ex->getCode():127;
-			return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault($errNo,$ex->getMessage())));
+			Endpoint::returnException($errNo,$ex->getMessage());
 		}
 	}	
 }
@@ -151,22 +137,21 @@ function getUserDetails($secKey,$chunkSize,$chunkNo){
 			eg: rtn[$lc][0]='username';
 					rtn[$lc][1]='email';
  */
-function getUsers($secKey,$usernameList){
+function getUsers($data){
+	$secKey=$data['hmacHash'];
+	$usernameList=$data['usernameList'];
 	if(!checkValidity($secKey,array($usernameList))){
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault(125,"Secret key invalid!")));
+		Endpoint::returnException(125,"Secret key invalid!");
 	}
 		
 	try{
 		if(!JCFactory::$userSync) throw new Exception("Not Implemented",1024);
 		$users=JCFactory::$userSync->getUsers($usernameList);		
-		return new xmlrpcresp(php_xmlrpc_encode(
-		      send_hmac($users)));
+		Endpoint::returnResult($users);
 	}
 	catch(Exception $ex){
 		$errNo=($ex->getCode())?$ex->getCode():127;
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault($errNo,$ex->getMessage())));
+		Endpoint::returnException($errNo,$ex->getMessage());
 	}
 }
 
@@ -183,21 +168,20 @@ function getUsers($secKey,$usernameList){
 				possible keys are..
 				JOOMLA_URL,JC_APPNAME
  */
-function loadSysInfo($secKey,$meta){
+function loadSysInfo($data){
+	$secKey=$data['hmacHash'];
+	$meta=$data['meta'];
 	if(!checkValidity($secKey,array($meta))){
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault(125,"Secret key invalid!")));
+		Endpoint::returnException(125,"Secret key invalid!");
 	}
 	
 	try{
 		if(!JCFactory::$misc) throw new Exception("Not Implemented",1024);
 		JCFactory::$misc->loadSysInfo($meta);	
-		return new xmlrpcresp(php_xmlrpc_encode(
-		      send_hmac(true)));	
+		Endpoint::returnResult(true);	
 	}catch(Exception $ex){
 		$errNo=($ex->getCode())?$ex->getCode():127;
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault($errNo,$ex->getMessage())));
+		Endpoint::returnException($errNo,$ex->getMessage());
 	}
 } 
 
@@ -207,22 +191,20 @@ function loadSysInfo($secKey,$meta){
  * use above strToIntArray like function
 	@return - html data(public) in a intArray
  */
-function getPublicView($secKey){
+function getPublicView($data){
+	$secKey=$data['hmacHash'];
 	if(!checkValidity($secKey,array())){
-		return new xmlrpcresp(php_xmlrpc_encode(
-		new Fault(125,"Secret key invalid!")));
+		Endpoint::returnException(125,"Secret key invalid!");
 	}
 
 	try{
 		if(!JCFactory::$misc) throw new Exception("Not Implemented",1024);
 		$html=JCFactory::$misc->getPublicView();
-		return new xmlrpcresp(php_xmlrpc_encode(
-		send_hmac(strToIntArray($html))));
+		Endpoint::returnResult(strToIntArray($html));
 	}
 	catch(Exception $ex){
 		$errNo=($ex->getCode())?$ex->getCode():127;
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault($errNo,$ex->getMessage())));
+		Endpoint::returnException($errNo,$ex->getMessage());
 	}
 
 }
@@ -233,22 +215,21 @@ function getPublicView($secKey){
  * use above strToIntArray like function
 	@return - html data(public) in a intArray
  */
-function getPrivateView($secKey,$username){
+function getPrivateView($data){
+	$secKey=$data['hmacHash'];
+	$username=$data['username'];
 if(!checkValidity($secKey,array($username))){
-		return new xmlrpcresp(php_xmlrpc_encode(
-		new Fault(125,"Secret key invalid!")));
+		//Endpoint::returnException(125,"Secret key invalid!");
 	}
 
 	try{
 		if(!JCFactory::$misc) throw new Exception("Not Implemented",1024);
 		$html=JCFactory::$misc->getPrivateView($username);
-		return new xmlrpcresp(php_xmlrpc_encode(
-		send_hmac(strToIntArray($html))));
+		Endpoint::returnResult(strToIntArray($html));
 	}
 	catch(Exception $ex){
 		$errNo=($ex->getCode())?$ex->getCode():127;
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault($errNo,$ex->getMessage())));
+		Endpoint::returnException($errNo,$ex->getMessage());
 	} 
 }
 
@@ -261,22 +242,20 @@ function strToIntArray($string){
 }
 
 
-function getUserGroups($secKey){
+function getUserGroups($data){
+	$secKey=$data['hmacHash'];
 	if(!checkValidity($secKey,array())){
-		return new xmlrpcresp(php_xmlrpc_encode(
-		new Fault(125,"Secret key invalid!")));
+		Endpoint::returnException(125,"Secret key invalid!");
 	}
 
 	try{
 		if(!JCFactory::$userSync) throw new Exception("Not Implemented",1024);
 		$res=JCFactory::$userSync->getUserGroups();
-		return new xmlrpcresp(php_xmlrpc_encode(
-		send_hmac($res)));
+		Endpoint::returnResult($res);
 	}
 	catch(Exception $ex){
 		$errNo=($ex->getCode())?$ex->getCode():127;
-		return new xmlrpcresp(php_xmlrpc_encode(
-			new Fault($errNo,$ex->getMessage())));
+		Endpoint::returnException($errNo,$ex->getMessage());
 	}
 }
 
@@ -328,4 +307,23 @@ function send_hmac($returnVal){
 	$hmac_hash=hmac_gen(array($returnVal),JCFactory::getAuthKey());
 	return array($hmac_hash,$returnVal);
 }
+
+//run REST/JSON endpoint..
+if(get_input('action')){
+	Endpoint::run();
+}
+else{
+	$action='getPrivateView';
+	$json=json_encode(array(
+		'hmacHash'=>'sdsd',
+		'username'=>'admin',
+	));
+	
+	$url="http://localhost/jconnekt/elgg/pg/jconnect?action=$action&json=$json";
+	$res=file($url);
+	$res=stripslashes(implode("\n",$res));
+	echo htmlspecialchars_decode(json_decode($res));
+	
+}
+
 ?>

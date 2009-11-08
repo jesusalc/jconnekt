@@ -42,7 +42,6 @@ class JCElggUserSync extends JCUserSync{
 		(($chunkNo-1)*$chunkSize) ."," .($chunkSize);
 
 		$result=get_data($sql);
-			
 		$users=array();
 		$lc=0;
 			
