@@ -34,6 +34,8 @@ class JconnectController extends JController
 	{
 		if(JC_API==1){
 			parent::display();
+			$ex=new ExApp('Elgg');
+			echo $ex->getUserCount();
 		}
 		else{
 			JError::raiseNotice(0,JText::_('API_NOT_ENABLED'));

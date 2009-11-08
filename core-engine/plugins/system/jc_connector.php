@@ -7,9 +7,6 @@
 */
 
 
-jimport('phpxmlrpc.xmlrpc');
-jimport('phpxmlrpc.xmlrpcs');
-
 define(JC_API,1);
 
 /**
@@ -32,9 +29,6 @@ class ExApp{
 
 	public function __construct($appname){
 		$this->loadExApp($appname);
-		$this->client=new xmlrpc_client($this->path,$this->host,$this->port);
-		$this->client->return_type="phpvals";
-		$this->client->setDebug(0);
 	}
 
 	private function loadExApp($appName){
@@ -61,58 +55,26 @@ class ExApp{
 		$this->cryptKey=$keys[1];
 	}
 
-	public function createUser($username,$email,$password){
-
-		return $this->callMethod("jc.createUser",array($username,$email,$password));
-	}
-
-	public function updateUser($username,$email,$password){
-
-		return $this->callMethod("jc.updateUser",array($username,$email,$password));
-	}
 
 	public function deleteUser($username){
 
-		return $this->callMethod("jc.deleteUser",array($username));
+		return $this->callMethod("deleteUser",array('username'=>$username));
 	}
 
 	public function getUserDetails($chunkSize,$chunkNo){
-		return $this->callMethod("jc.getUserDetails",array($chunkSize,$chunkNo));
+		return $this->callMethod("getUserDetails",array(
+			'chunkSize'=>$chunkSize,
+			'chunkNo'=>$chunkNo));
 	}
 
 	public function getUsers($usernameList=array()){
-		return $this->callMethod("jc.getUsers",array($usernameList));
+		return $this->callMethod("getUsers",array(
+			'usernameList'=>$usernameList));
 	}
 
-	public function login($username,$password,$remember=false){
-		$rtn= $this->callMethod("jc.login",array($username,$password,$remember));
-
-		foreach ($this->cookies as $i => $value) {
-			$time=strtotime($this->cookies[$i]['expires']);
-			setcookie($i,$this->cookies[$i]['value'],$time,$this->cookies[$i]['path']);
-		}
-		return $rtn;
-	}
-
-	public function logout($username){
-		$rtn= $this->callMethod("jc.logout",array($username));
-		foreach ($this->cookies as $i => $value) {
-			$time=strtotime($this->cookies[$i]['expires']);
-			setcookie($i,$this->cookies[$i]['value'],$time,$this->cookies[$i]['path']);
-		}
-
-		return $rtn;
-	}
-
-	/**
-		$userDetailsList should be the array of userObjects with username and email
-	 */
-	public function bulkSync($userDetailsList){
-		return $this->callMethod("jc.bulkSync",array($userDetailsList));
-	}
 
 	public function  getUserCount(){
-		return $this->callMethod("jc.getUserCount",array());
+		return $this->callMethod("getUserCount",array());
 	}
 
 	/**
@@ -121,7 +83,7 @@ class ExApp{
 	 @return - html data(public) in a intArray
 	 */
 	public function  getPublicView(){
-		return $this->callMethod("jc.getPublicView",array());
+		return $this->callMethod("getPublicView",array());
 	}
 
 	/**
@@ -130,7 +92,7 @@ class ExApp{
 	 @return - html data(private) in a intArray
 	 */
 	public function  getPrivateView($username){
-		return $this->callMethod("jc.getPrivateView",array($username));
+		return $this->callMethod("getPrivateView",array('username'=>$username));
 	}
 
 	/**
@@ -143,44 +105,32 @@ class ExApp{
 	 PARAMS -contains array of parameters for the path
 	 */
 	public function loadSysInfo($meta){
-		return $this->callMethod('jc.loadSysInfo',array($meta));
+		return $this->callMethod('loadSysInfo',array('meta'=>$meta));
 	}
 
 	/**
 		get user group from the ExApp
 	 */
 	public function getUserGroups(){
-		return $this->callMethod('jc.getUserGroups',array());
+		return $this->callMethod('getUserGroups',array());
 	}
 
-	private function callMethod($methodName,$paramArray){
+	private function callMethod($action,$paramArray){
 		//generating hash value and send-it...
 		$hmac_hash=$this->hmac_gen($paramArray);
-		$msg=new xmlrpcmsg($methodName);
-		$msg->addParam(php_xmlrpc_encode($hmac_hash));
-		for($lc=0;$lc<sizeof($paramArray);$lc++){
-			$msg->addParam(php_xmlrpc_encode($paramArray[$lc]));
-		}
-			
-		$res =& $this->client->send($msg, 0, '');
-		if($res->faultCode){
-			throw new Exception("xmlrpc Error:($this->appName) ". $res->faultCode." :: ".$res->faultString);
-		}
-		else if($res->errno){
-			throw new Exception("user Error:($this->appName) ". $res->errno." :: ".$res->errstr);
-		}
-		$varU=$res->value();
 		
-		if(!is_string($varU) && isset($varU['code'])){
-			throw new Exception("ExApp Error($this->appName): ". $varU['code']." :: ".$varU['message']);
+		$paramArray['hmacHash']=$hmac_hash;
+		$endpoint="http://{$this->host}:{$this->port}{$this->path}";
+		$call=$endpoint."?&action=$action&json=".json_encode($paramArray);
+		$res=file($call);
+		$res=stripslashes(implode("\n",$res));
+		$res=json_decode($res,true);
+		if($res->result==0){
+			return $res['data'];
 		}
-
-		//validating hash for return value..
-		$hmac_hash=$this->hmac_gen(array($varU[1]));
-		if($varU[0]!=$hmac_hash) throw new Exception ("ExApp Error: Authentication or Integrity failed!");
-		$varU=$varU[1];
-
-		return $varU;
+		else{
+			throw new Exception($res->message,$res->no);
+		}
 	}
 
 	/**

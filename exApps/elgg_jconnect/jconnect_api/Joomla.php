@@ -61,9 +61,9 @@ class Joomla{
 		$paramArray['appName']=$this->appName;
 		$call=$this->endpoint."?option=com_jconnect&format=raw&action=$action&json=".json_encode($paramArray);
 		$res=file($call);
-		$res=json_decode(implode("\n",$res),true);
+		$res=json_decode(stripslashes(implode("\n",$res)),true);
 		if($res->result==0){
-			return $res->data;
+			return $res['data'];
 		}
 		else{
 			throw new Exception($res->message,$res->no);
