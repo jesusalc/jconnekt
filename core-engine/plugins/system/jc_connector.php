@@ -121,9 +121,8 @@ class ExApp{
 		
 		$paramArray['hmacHash']=$hmac_hash;
 		$endpoint="http://{$this->host}:{$this->port}{$this->path}";
-		$call=$endpoint."?&action=$action&json=".json_encode($paramArray);
-		$res=file($call);
-		$res=stripslashes(implode("\n",$res));
+		//$call=$endpoint."?&action=$action&json=".json_encode($paramArray);
+		$res=$this->sendRequest("$endpoint?",$action,json_encode($paramArray));
 		$res=json_decode($res,true);
 		if($res->result==0){
 			return $res['data'];
@@ -133,6 +132,35 @@ class ExApp{
 		}
 	}
 
+	/**
+		This will do the actual request (with the channel)
+		@param $endpoint request endpoint url (with ? )
+		@param $action action to calling
+		@param $json json data..
+		
+	 */
+	private function sendRequest($endpoint,$action,$json){
+		$res;
+		if(function_exists('curl_init')){
+			$ch = curl_init("$endpoint");
+			$params=urlencode("action").'='.urlencode($action)."&";
+			$params.=urlencode("json").'='.urlencode($json);
+			curl_setopt($ch, CURLOPT_POSTFIELDS,  $params);
+	        curl_setopt($ch, CURLOPT_HEADER, 0);
+	        curl_setopt($ch, CURLOPT_POST, 1);
+	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	        $res = stripcslashes(curl_exec($ch));       
+	        curl_close($ch);
+	        
+		}
+		else{
+			$res=file("{$endpoint}&action=$action&json=$json");
+			$res=stripslashes(implode("\n",$res));
+			
+		}
+		
+		return $res;
+	}
 	/**
 	@param $params - the parameters work as the message in HMAC
 	@return string - hmac hash
