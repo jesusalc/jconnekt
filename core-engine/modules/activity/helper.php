@@ -25,19 +25,14 @@ class ModJconnectActivityHelper{
 			return "This JConnect ExApp is not Enabled yet!";
 		$user=JFactory::getUser();
 		$exApp=new ExApp($params->get('appName'));
-		$intArray;
+		$html;
 		if($user->id){
-			$intArray=$exApp->getPrivateView($user->username);
+			$html=$exApp->getPrivateView($user->username);
 		}
 		else{
-			$intArray=$exApp->getPublicView();
+			$html=$exApp->getPublicView();
 		}
-		
-		$html="";
-		foreach($intArray as $intCharVal){
-			$html.=chr($intCharVal);
-		}
-		
-		return $html;
+
+		return urldecode($html);
 	}
 }
