@@ -189,7 +189,7 @@ function loadSysInfo($data){
  * The returning html data will be displayed for public view
  * return data is in a intArray in ascii values because xmlrpc doesn't allow "<>&".. chars
  * use above strToIntArray like function
-	@return - html data(public) in a intArray
+	@return - html data(public) in url encoded
  */
 function getPublicView($data){
 	$secKey=$data['hmacHash'];
@@ -200,7 +200,7 @@ function getPublicView($data){
 	try{
 		if(!JCFactory::$misc) throw new Exception("Not Implemented",1024);
 		$html=JCFactory::$misc->getPublicView();
-		Endpoint::returnResult(strToIntArray($html));
+		Endpoint::returnResult(urlencode($html));
 	}
 	catch(Exception $ex){
 		$errNo=($ex->getCode())?$ex->getCode():127;
@@ -213,32 +213,24 @@ function getPublicView($data){
  * The returning html data will be displayed for public view
  * return data is in a intArray in ascii values because xmlrpc doesn't allow "<>&".. chars
  * use above strToIntArray like function
-	@return - html data(public) in a intArray
+	@return - html data(public) in url encoded
  */
 function getPrivateView($data){
 	$secKey=$data['hmacHash'];
 	$username=$data['username'];
 if(!checkValidity($secKey,array($username))){
-		//Endpoint::returnException(125,"Secret key invalid!");
+		Endpoint::returnException(125,"Secret key invalid!");
 	}
 
 	try{
 		if(!JCFactory::$misc) throw new Exception("Not Implemented",1024);
 		$html=JCFactory::$misc->getPrivateView($username);
-		Endpoint::returnResult(strToIntArray($html));
+		Endpoint::returnResult(urlencode($html));
 	}
 	catch(Exception $ex){
 		$errNo=($ex->getCode())?$ex->getCode():127;
 		Endpoint::returnException($errNo,$ex->getMessage());
 	} 
-}
-
-function strToIntArray($string){
-	$intArray=array();
-	for($lc=0;$lc<strlen($string);$lc++){
-		array_push($intArray,ord(substr($string,$lc,1)));
-	}
-	return $intArray;
 }
 
 
@@ -313,7 +305,7 @@ if(get_input('action')){
 	Endpoint::run();
 }
 else{
-	$action='getPrivateView';
+	$action='getPublicView';
 	$json=json_encode(array(
 		'hmacHash'=>'sdsd',
 		'username'=>'admin',
@@ -322,8 +314,9 @@ else{
 	$url="http://localhost/jconnekt/elgg/pg/jconnect?action=$action&json=$json";
 	$res=file($url);
 	$res=stripslashes(implode("\n",$res));
-	echo htmlspecialchars_decode(json_decode($res));
-	
+	$res=json_decode($res);
+	$abc=$res->data;
+	echo urldecode($abc);
 }
 
 ?>

@@ -94,7 +94,7 @@ JSON	:
 	}
 return :string | Exception
 
-string: HTML data..
+string: HTML data (url encoded)..
 -------------------------
 
 Action	: getPublicView
@@ -107,7 +107,7 @@ JSON	:
 	}
 return :string | Exception
 
-string: HTML data..
+string: HTML data string: HTML data (url encoded)..
 -------------------------
 
 Action	: getUserGroups
