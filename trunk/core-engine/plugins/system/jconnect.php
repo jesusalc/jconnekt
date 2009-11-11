@@ -27,6 +27,11 @@ class plgSystemJconnect extends JPlugin {
 	}
 
 	function onAfterInitialise(){
-		require_once( dirname(__FILE__).DS.'jc_connector.php' );
+		define(JC_API,1);
+		require_once( dirname(__FILE__).DS.'Helper.php' );
+		require_once( dirname(__FILE__).DS.'ExApp.php' );
+		require_once( dirname(__FILE__).DS.'ExternalUser.php' );
+		require_once( dirname(__FILE__).DS.'Groups.php' );
+		require_once( dirname(__FILE__).DS.'SyncUser.php' );
 	}
 }
