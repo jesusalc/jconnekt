@@ -122,14 +122,14 @@ class ExApp{
 		$paramArray['hmacHash']=$hmac_hash;
 		$endpoint="http://{$this->host}:{$this->port}{$this->path}";
 		//$call=$endpoint."?&action=$action&json=".json_encode($paramArray);
-		$res=$this->sendRequest("$endpoint?",$action,json_encode($paramArray));
+		$res=$this->sendRequest($endpoint,$action,json_encode($paramArray));
 		$res=json_decode($res,true);
 		if($res->result==0){
 			return $res['data'];
 		}
 		else{
 			throw new Exception($res->message,$res->no);
-		}
+		} 
 	}
 
 	/**
@@ -141,7 +141,7 @@ class ExApp{
 	 */
 	private function sendRequest($endpoint,$action,$json){
 		$res;
-		if(function_exists('curl_init')){
+		if(function_exists('curl_init2')){
 			$ch = curl_init("$endpoint");
 			$params=urlencode("action").'='.urlencode($action)."&";
 			$params.=urlencode("json").'='.urlencode($json);
@@ -154,7 +154,7 @@ class ExApp{
 	        
 		}
 		else{
-			$res=file("{$endpoint}&action=$action&json=$json");
+			$res=file("{$endpoint}?&action=$action&json=$json");
 			$res=stripslashes(implode("\n",$res));
 			
 		}
