@@ -88,8 +88,9 @@ class Methods{
 		$email=$data['email'];
 		$password=$data['password'];
 		$group=$data['group'];
+	
 		
-		$fault=authenticate($appName,$hmac_hash,array($username,$email,$password,$group));
+		$fault=authenticate($appName,$hmac_hash,array($username,$email,$password,$group),$data['salt']);
 		if(!is_bool($fault) || $fault==false){
 			Endpoint::returnException($fault->code,$fault->message);
 		}
@@ -156,7 +157,7 @@ class Methods{
 		$password=$data['password'];
 		$group=$data['group'];
 		
-		$fault=authenticate($appName,$hmac_hash,array($username,$email,$password,$group));
+		$fault=authenticate($appName,$hmac_hash,array($username,$email,$password,$group),$data['salt']);
 		if(!is_bool($fault) || $fault==false){
 			Endpoint::returnException($fault->code,$fault->message);
 		}
@@ -220,7 +221,7 @@ class Methods{
 		$username=$data['username'];
 		
 		$appID=JCHelper::getAppID($appName);	
-		$fault=authenticate($appName,$hmac_hash,array($username));
+		$fault=authenticate($appName,$hmac_hash,array($username),$data['salt']);
 		if(!is_bool($fault) || $fault==false){
 			Endpoint::returnException($fault->code,$fault->message);
 		}
