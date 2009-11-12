@@ -63,11 +63,11 @@ function loginAuthenticate($appName){
  @return Fault|true - true when authenticated otherwise
  Fault Object with Error Details
  */
-function authenticate($appName,$hmac_hash,$params){
+function authenticate($appName,$hmac_hash,$params,$salt){
 	$valid=false;
 	try{
 		$exApp=new ExApp($appName);
-		$hmac_hash_local=hmac_gen($params,$exApp->authKey);
+		$hmac_hash_local=hmac_gen($params,$exApp->authKey,$salt);
 		$secValid=$hmac_hash==$hmac_hash_local;
 		//IP Checking....
 		$exAppIP=JCHelper::getMeta($appName,"IP");
@@ -104,7 +104,7 @@ function authenticate($appName,$hmac_hash,$params){
 @param $params - the parameters work as the message in HMAC
 @return string - hmac hash
 */
-function hmac_gen($params,$key){
+function hmac_gen($params,$key,$salt){
 	$message="";
 	foreach($params as $param){
 		if(is_array($param) || is_object($param)){
@@ -114,7 +114,7 @@ function hmac_gen($params,$key){
 			$message.=$param;
 		}
 	}
-	return hash_hmac("md5",$message,$key);
+	return hash_hmac("md5",$message.$salt,$key);
 }
 
 function send_hmac($appName,$returnVal){
