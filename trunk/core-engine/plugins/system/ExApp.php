@@ -115,9 +115,11 @@ class ExApp{
 
 	private function callMethod($action,$paramArray){
 		//generating hash value and send-it...
-		$hmac_hash=$this->hmac_gen($paramArray);
+		$salt=substr(md5(rand()),0,25);
+		$hmac_hash=$this->hmac_gen($paramArray,$salt);
 		
 		$paramArray['hmacHash']=$hmac_hash;
+		$paramArray['salt']=$salt;
 		$endpoint="http://{$this->host}:{$this->port}{$this->path}";
 		//$call=$endpoint."?&action=$action&json=".json_encode($paramArray);
 		$res=$this->sendRequest($endpoint,$action,json_encode($paramArray));
@@ -163,7 +165,7 @@ class ExApp{
 	@param $params - the parameters work as the message in HMAC
 	@return string - hmac hash
 	*/
-	private function hmac_gen($params){
+	private function hmac_gen($params,$salt){
 		$message="";
 		foreach($params as $param){
 			if(is_array($param) || is_object($param)){
@@ -174,7 +176,7 @@ class ExApp{
 			}
 		}
 		
-		return hash_hmac("md5",$message,$this->authKey);
+		return hash_hmac("md5",$message.$salt,$this->authKey);
 	}
 
 	public static function getExAppList(){

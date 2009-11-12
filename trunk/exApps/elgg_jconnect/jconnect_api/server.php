@@ -56,7 +56,7 @@ class Endpoint{
 function deleteUser($data){
 	$secKey=$data['hmacHash'];
 	$username=$data['username'];
-	if(!checkValidity($secKey,array($username))){
+	if(!checkValidity($secKey,array($username),$data['salt'])){
 		Endpoint::returnException(125,"Secret key invalid!");
 	}
 	else if(!$username){
@@ -84,7 +84,7 @@ function deleteUser($data){
  */
 function getUserCount($data){
 	$secKey=$data['hmacHash'];
-	if(!checkValidity($secKey,array())){
+	if(!checkValidity($secKey,array(),$data['salt'])){
 		Endpoint::returnException(125,"Secret key invalid!");
 	}
 	
@@ -114,7 +114,7 @@ function getUserDetails($data){
 	$chunkSize=$data['chunkSize'];
 	$chunkNo=$data['chunkNo'];
 	
-	if(!checkValidity($secKey,array($chunkSize,$chunkNo))){
+	if(!checkValidity($secKey,array($chunkSize,$chunkNo),$data['salt'])){
 		Endpoint::returnException(125,"Secret key invalid!");
 	}
 	else{
@@ -140,7 +140,7 @@ function getUserDetails($data){
 function getUsers($data){
 	$secKey=$data['hmacHash'];
 	$usernameList=$data['usernameList'];
-	if(!checkValidity($secKey,array($usernameList))){
+	if(!checkValidity($secKey,array($usernameList),$data['salt'])){
 		Endpoint::returnException(125,"Secret key invalid!");
 	}
 		
@@ -171,7 +171,7 @@ function getUsers($data){
 function loadSysInfo($data){
 	$secKey=$data['hmacHash'];
 	$meta=$data['meta'];
-	if(!checkValidity($secKey,array($meta))){
+	if(!checkValidity($secKey,array($meta),$data['salt'])){
 		Endpoint::returnException(125,"Secret key invalid!");
 	}
 	
@@ -193,7 +193,7 @@ function loadSysInfo($data){
  */
 function getPublicView($data){
 	$secKey=$data['hmacHash'];
-	if(!checkValidity($secKey,array())){
+	if(!checkValidity($secKey,array(),$data['salt'])){
 		Endpoint::returnException(125,"Secret key invalid!");
 	}
 
@@ -218,7 +218,7 @@ function getPublicView($data){
 function getPrivateView($data){
 	$secKey=$data['hmacHash'];
 	$username=$data['username'];
-if(!checkValidity($secKey,array($username))){
+if(!checkValidity($secKey,array($username),$data['salt'])){
 		Endpoint::returnException(125,"Secret key invalid!");
 	}
 
@@ -236,7 +236,7 @@ if(!checkValidity($secKey,array($username))){
 
 function getUserGroups($data){
 	$secKey=$data['hmacHash'];
-	if(!checkValidity($secKey,array())){
+	if(!checkValidity($secKey,array(),$data['salt'])){
 		Endpoint::returnException(125,"Secret key invalid!");
 	}
 
@@ -268,8 +268,8 @@ class Fault{
 	@param $hmac_hash - hmac hash for the values in the parameters
 	@param $params - array of parameters
  */
-function checkValidity($hmac_hash,$params){
-	$hmac_hash_local=hmac_gen($params,JCFactory::getAuthKey());
+function checkValidity($hmac_hash,$params,$salt){
+	$hmac_hash_local=hmac_gen($params,JCFactory::getAuthKey(),$salt);
 	if($hmac_hash!=$hmac_hash_local){
 		return false;
 	}
@@ -282,7 +282,7 @@ function checkValidity($hmac_hash,$params){
 @param $params - the parameters work as the message in HMAC
 @return string - hmac hash
 */
-function hmac_gen($params,$key){
+function hmac_gen($params,$key,$salt){
 	$message="";
 	foreach($params as $param){
 		if(is_array($param) || is_object($param)){
@@ -292,7 +292,7 @@ function hmac_gen($params,$key){
 			$message.=$param;
 		}
 	}
-	return hash_hmac("md5",$message,$key);
+	return hash_hmac("md5",$message.$salt,$key);
 }
 
 function send_hmac($returnVal){
