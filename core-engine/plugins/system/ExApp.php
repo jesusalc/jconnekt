@@ -39,7 +39,7 @@ class ExApp{
 		$db->setQuery($query);
 		$app=$db->loadObject();
 
-		if(!$app) throw new Exception("ExApp name is invalid");
+		if(!$app) throw new Exception("ExApp name($appName) is invalid");
 
 		$this->appName=$app->appName;
 		$this->secretKey=$app->secretKey;

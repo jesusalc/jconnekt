@@ -24,62 +24,8 @@
 		<filename>views/auth/tmpl/index.html</filename>
 		<filename>views/auth/view.raw.php</filename>
 		<filename>views/auth/index.html</filename>
-		<filename>views/openiduser/tmpl/default.php</filename>
-		<filename>views/openiduser/tmpl/index.html</filename>
-		<filename>views/openiduser/view.raw.php</filename>
-		<filename>views/openiduser/index.html</filename>
-		<filename>helpers/JCOpenIDStore.php</filename>
-		<filename>helpers/openID.php</filename>
 		<filename>helpers/initServer.php</filename>
 		<filename>helpers/aes-lib.php</filename>
-		<filename>helpers/openid/Auth/OpenID/ServerRequest.php</filename>
-		<filename>helpers/openid/Auth/OpenID/MySQLStore.php</filename>
-		<filename>helpers/openid/Auth/OpenID/DiffieHellman.php</filename>
-		<filename>helpers/openid/Auth/OpenID/Server.php</filename>
-		<filename>helpers/openid/Auth/OpenID/Discover.php</filename>
-		<filename>helpers/openid/Auth/OpenID/DatabaseConnection.php</filename>
-		<filename>helpers/openid/Auth/OpenID/CryptUtil.php</filename>
-		<filename>helpers/openid/Auth/OpenID/Extension.php</filename>
-		<filename>helpers/openid/Auth/OpenID/SQLiteStore.php</filename>
-		<filename>helpers/openid/Auth/OpenID/KVForm.php</filename>
-		<filename>helpers/openid/Auth/OpenID/BigMath.php</filename>
-		<filename>helpers/openid/Auth/OpenID/PostgreSQLStore.php</filename>
-		<filename>helpers/openid/Auth/OpenID/Interface.php</filename>
-		<filename>helpers/openid/Auth/OpenID/MemcachedStore.php</filename>
-		<filename>helpers/openid/Auth/OpenID/TrustRoot.php</filename>
-		<filename>helpers/openid/Auth/OpenID/Message.php</filename>
-		<filename>helpers/openid/Auth/OpenID/index.html</filename>
-		<filename>helpers/openid/Auth/OpenID/Parse.php</filename>
-		<filename>helpers/openid/Auth/OpenID/FileStore.php</filename>
-		<filename>helpers/openid/Auth/OpenID/AX.php</filename>
-		<filename>helpers/openid/Auth/OpenID/HMAC.php</filename>
-		<filename>helpers/openid/Auth/OpenID/SQLStore.php</filename>
-		<filename>helpers/openid/Auth/OpenID/URINorm.php</filename>
-		<filename>helpers/openid/Auth/OpenID/Association.php</filename>
-		<filename>helpers/openid/Auth/OpenID/DumbStore.php</filename>
-		<filename>helpers/openid/Auth/OpenID/Nonce.php</filename>
-		<filename>helpers/openid/Auth/OpenID/SReg.php</filename>
-		<filename>helpers/openid/Auth/OpenID/PAPE.php</filename>
-		<filename>helpers/openid/Auth/OpenID/Consumer.php</filename>
-		<filename>helpers/openid/Auth/Yadis/Yadis.php</filename>
-		<filename>helpers/openid/Auth/Yadis/XML.php</filename>
-		<filename>helpers/openid/Auth/Yadis/ParseHTML.php</filename>
-		<filename>helpers/openid/Auth/Yadis/HTTPFetcher.php</filename>
-		<filename>helpers/openid/Auth/Yadis/Misc.php</filename>
-		<filename>helpers/openid/Auth/Yadis/XRI.php</filename>
-		<filename>helpers/openid/Auth/Yadis/PlainHTTPFetcher.php</filename>
-		<filename>helpers/openid/Auth/Yadis/index.html</filename>
-		<filename>helpers/openid/Auth/Yadis/ParanoidHTTPFetcher.php</filename>
-		<filename>helpers/openid/Auth/Yadis/XRIRes.php</filename>
-		<filename>helpers/openid/Auth/Yadis/Manager.php</filename>
-		<filename>helpers/openid/Auth/Yadis/XRDS.php</filename>
-		<filename>helpers/openid/Auth/index.html</filename>
-		<filename>helpers/openid/Auth/OpenID.php</filename>
-		<filename>helpers/openid/JConnect.php</filename>
-		<filename>helpers/openid/recieve.php</filename>
-		<filename>helpers/openid/consumer.php</filename>
-		<filename>helpers/openid/index.html</filename>
-		<filename>helpers/openid/common.php</filename>
 		<filename>index.html</filename>
 		<filename>assests/style.css</filename>
 		<filename>assests/jcaccount.png</filename>
