@@ -26,6 +26,7 @@ class JconnectModelBulksync extends JModel {
 		if($this->_db->getErrorNum()){
 			throw new Exception($this->_db->getErrorNum() ." :: ". $this->_db->getErrorMsg());
 		}
+	
 		return $this->_db->loadObject()->cnt;
 	}
 
@@ -131,6 +132,7 @@ class JconnectModelBulksync extends JModel {
 				$syncSize=$this->getSyncUserCount($appName);
 				$appSize=$this->getExAppUserCount($appName);
 				$jSize=$this->getJoomlaUserCount();
+				
 				$syncInfo=new SyncInfo(
 				$appName,
 				$appSize,

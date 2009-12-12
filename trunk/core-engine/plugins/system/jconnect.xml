@@ -11,7 +11,11 @@
 	<description>This is the Connector API for JConnect ExApps</description>
 	<files>
 		<filename plugin="jconnect">jconnect.php</filename>
-		<filename>jc_connector.php</filename>
+		<filename>ExApp.php</filename>
+		<filename>ExternalUser.php</filename>
+		<filename>Groups.php</filename>
+		<filename>Helper.php</filename>
+		<filename>SyncUser.php</filename>
 	</files>
 	<params/>
 </install>

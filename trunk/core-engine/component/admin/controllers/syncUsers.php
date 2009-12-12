@@ -21,15 +21,6 @@ class JconnectControllerSyncUsers extends JController{
 		$this->setRedirect("index.php?option=com_jconnect");
 	}
 	
-	public function desync(){
-		$cids=JRequest::getVar("cid",array(),"","array");
-		foreach ($cids as $cid){
-			$inp=explode(",",$cid);
-			$su=new SyncUser($inp[0],$inp[1]);
-			$su->delete();
-		}
-		$this->setRedirect("index.php?option=com_jconnect&controller=syncUsers");
-	}
 	
 	public function ban(){
 		$cids=JRequest::getVar("cid",array(),"","array");

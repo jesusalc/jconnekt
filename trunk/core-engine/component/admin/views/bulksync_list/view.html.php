@@ -20,6 +20,7 @@ class JconnectViewBulksync_list extends JView{
 		$model=$this->getModel();
 		
 		$this->assignRef("infoList",$model->getInfoList());
+		
 		parent::display($tmpl);
 	}
 }

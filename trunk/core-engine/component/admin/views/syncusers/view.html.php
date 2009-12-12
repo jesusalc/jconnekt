@@ -17,7 +17,6 @@ class JconnectViewSyncusers extends JView{
 		JToolBarHelper::title(JText::_('SYNC_USER_MANAGE'),"generic.png");
 		JToolBarHelper::trash("ban",JText::_('BAN'));
 		JToolBarHelper::trash("deban",JText::_('DEBAN'));
-		JToolBarHelper::archiveList("desync",JText::_('DESYNC'));
 		JToolBarHelper::cancel("close",JText::_('CLOSE'));
 		
 		$data=$this->get('data');

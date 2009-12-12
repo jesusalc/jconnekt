@@ -33,8 +33,33 @@ class plgUserJconnect extends JPlugin {
 	}
 
 
+	function onAfterStoreUser($user, $isnew, $success, $msg)
+	{
+		global $mainframe;	
+			
+		if (!$isnew)
+		{
+			//when password changes...
+			// that user now is not a External User. Now he's JConnekt user
+			if(JRequest::getString('password')!=""){
+				$exAppNames=ExApp::getExAppList();
+				//deleting External User info..
+				for($lc=0;$lc<sizeof($exAppNames);$lc++){
+						$appID=JCHelper::getAppID($exAppNames[$lc]);
+						$su=new SyncUser($user['id'],$appID);
+						$su->delete();
+				}
+				
+				if(ExternalUser::contains($user['id'])){
+					$eu=new ExternalUser($user['id']);
+					$eu->delete();
+				}
+			}
+		}
+	}
+	
 	/**
-	 * this will delete the syncUser from the syncUser table and trigger ExApps for deletion...
+	 * this will delete the syncUser from the syncUser table 
 	 */
 	function onAfterDeleteUser($user, $succes, $msg)
 	{
@@ -43,45 +68,20 @@ class plgUserJconnect extends JPlugin {
 
 		//get the current session trigger of this action
 		$actionOwner=JFactory::getSession()->get("JC_ACTION_OWNER");
+		$appID=JCHelper::getAppID($exAppNames[$lc]);
 		
-		//which stores the exceptions
-		$exceptions=array();
 		//request ExApps to delete the users..
 		$exAppNames=ExApp::getExAppList();
 		//sending data to exApp
 		for($lc=0;$lc<sizeof($exAppNames);$lc++){
-			//stop recursivly sending user-info for triggered app
-			if($actionOwner==$exAppNames[$lc]) continue;
-			//check for enablity of the ExApp
-			
-			if(!JCHelper::isExAppEnabled($exAppNames[$lc],JCHelper::$OUTGOING)) continue;
-			
-			//check for early sync
-			$ans=SyncUser::contains($user['id'],$exAppNames[$lc]);
-			
-			if($ans){
-				try{
-					//already sync user
-					$exApp=new ExApp($exAppNames[$lc]);
-					//only send for not banned users..
-					$appID=JCHelper::getAppID($exAppNames[$lc]);
-					$su=new SyncUser($user['id'],$appID);
-					var_dump($su);
-					if(!($su->status=='BAN')){
-						$exApp->deleteUser($user['username']);
-					}
-					$su->delete();
-				}
-				catch(Exception $ex){
-					$exceptions[sizeof($exceptions)]=$ex;
-				}
-			}
+				$appID=JCHelper::getAppID($exAppNames[$lc]);
+				$su=new SyncUser($user['id'],$appID);
+				$su->delete();
 		}
 		
-
-		//print the exceptions as warrning / error
-		foreach($exceptions as $id=>$val){
-			JError::raiseWarning(0,"JConnect(delete) - " . $val->getMessage());
+		if(ExternalUser::contains($user['id'])){
+			$eu=new ExternalUser($user['id']);
+			$eu->delete();
 		}
 	}
 	
