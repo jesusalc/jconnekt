@@ -1,10 +1,11 @@
 #summary How-to install and configure JConnekt with Elgg .
+#labels Featured
 
 == Before You Begin ==
 There are few things that you need to have |know| before you go any funther
  * A Working Joomla(Version 1.5) Site and Install Extensions - ([http://www.joomla.org more info])
  * A Working Elgg(Version 1.5 or 1.6) Site - ([http://www.elgg.org more info])
- * How to install and enable an *elgg plugin* ([installElggPlugin More Info])
+ * How to install and enable an *elgg plugin* ([http://docs.elgg.org/wiki/Configuration/Plugins more info])
 
 == What is JConnekt ==
 *JConnekt* is a *Integration Engine* Which can Integrate External Application to [http://www.joomla.org Joomla].Using JConnekt it makes easier the communication between Joomla and External Application. And also There can also be communication between External Application.
@@ -28,7 +29,7 @@ Anyway this is not a wiki to tell you howto do that kind of work and also such a
 == Install JConnekt ==
 Installing JConnekt is pretty much straight forward.All you have to do is goto administration section of Joomla and install downloaded JConnekt engine as an extension. *If successful you will a get a menu item called JConnekt in the Components menu*.If you click that you'll get an view like this.  
 
-http://img150.imageshack.us/img150/5017/JConnekt.jpg
+http://img150.imageshack.us/img150/5017/jconnect.jpg
 
 == Configure JConnekt (with Elgg) ==
 Actually there is no configurations you've do with JConnekt. All the things are automatically done by JConnekt.
