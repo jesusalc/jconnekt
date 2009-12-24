@@ -12,6 +12,9 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 require_once( JPATH_COMPONENT.DS.'helpers'.DS.'initServer.php' );
 
+include_once(JPATH_COMPONENT_SITE.DS.'tables'.DS.'TableTokens.php');
+
+
 jimport('joomla.application.component.controller');
 
 
@@ -36,14 +39,17 @@ class JconnectController extends JController
 
 	function display()
 	{
+		setcookie("jconnekt_token",'this is the token',null,"/");
 		Endpoint::run();
-	}	
+	}
+
+	
 }
 
 class Endpoint{
 	//runs the endpoint
 	static function run(){
-		$registeredActions=array('createUser','updateUser','deleteUser');
+		$registeredActions=array('createUser','updateUser','deleteUser','register');
 		$action=JRequest::getCmd('action');
 		if(in_array($action,$registeredActions)){
 			$data=json_decode(JRequest::getString('json'),true);
@@ -268,6 +274,31 @@ class Methods{
 	
 	/**
 	 * 
+	 * Register the ExApp and take the request token.
+	 * @return unknown_type
+	 */
+	static function register($data){
+		$appName=$data['appName'];
+		try{
+			$exApp=new ExApp($appName);
+			$model=JModel::getInstance("token","JConnectModel");
+			$request_token=md5(rand());
+			$access_token=hash_hmac("md5",$request_token,$exApp->authKey);
+			
+			$user=JFactory::getUser();
+			$state=($user->id)?"online":"offline";
+			$model->insert($access_token,JCHelper::getAppID($appName),time());
+			$rtn=array('state'=>$state,'request_token'=>$request_token);
+			Endpoint::returnResult($rtn);
+			
+		}
+		catch(Exception $ex){
+			return Endpoint::returnException(4,"Invalid External Application");
+		}
+	}
+	
+	/**
+	 * 
 	 * check the given user is banned or not!
 	 * @param $JID-Joomla user ID
 	 * @param $appID - exApp ID
@@ -277,5 +308,7 @@ class Methods{
 		$su=new SyncUser($JID,$appID);
 		return (isset($su) && $su->status=="BAN")?true:false;
 	}
+	
+	
 }
 ?>

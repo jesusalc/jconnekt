@@ -83,3 +83,10 @@ CREATE TABLE IF NOT EXISTS `#__jc_auth_key` (
   `appID` int(11) NOT NULL,
   PRIMARY KEY (`privateKey`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `#__jc_tokens` (
+  `appID` int(11) NOT NULL,
+  `token` varchar(32) NOT NULL,
+  `timestamp` bigint(11) NOT NULL,
+  PRIMARY KEY (`token`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
