@@ -85,7 +85,13 @@ class plgUserJconnect extends JPlugin {
 		}
 	}
 	
+	function onLoginUser($user, $options){
+		setcookie('jconnekt_token',0,time()-3600,"/");
+	}
 	
+	function onLogoutUser($user){
+		setcookie('jconnekt_token',0,time()-3600,"/");	
+	}
 }
 
 
