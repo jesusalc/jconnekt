@@ -1,26 +1,3 @@
-New Authentication Layer (OpenID Like..)
------------------------------------------------------
-
-High-end how-to
-----------------------
-1.from exApp send a request to Joomla with a callback URL...(include nonce) and
-  the exApp name.. (stores the nonce even)
-2.Then joomla do the actual login stuff....
-3.If success joomla create a public key/private key and redirect the callback URL
-  with the public key..
-4.In the mean-time joomla stores the private-key with the timestamp and isUsed fields
-5.Then in the ExApp it's call a fopen call to Joomla with the private key
-  (generated using public-key) as the args
-6.In there it'll check the private-keys validity and send the information
-
-back-end how-to
------------------------------
-1.controller to do the login
-2.create the table
-3.private-key,public-key generation
-4.create the private-key request function
-5.modify elgg to do-auth
-
 NEW Authentication token procedure
 -------------------------------------
 1. Register ExApp with Joomla for the browser session (sending a redirect with appName)
@@ -39,7 +16,7 @@ NEW Authentication token procedure
 	--------------------------
 	Make DB Changes
 	add plugin hooks for destroy tokens when user-action changing
-	Create endpoint actions (register,validate_token,check_token,query)
+	Create endpoint actions (request_token,check_token,query)
 	
 	Elgg side modifcations
 	--------------------------
@@ -51,4 +28,20 @@ NEW Authentication token procedure
 	5. goto step 1
 	
 	
-
+	Backend Procedure
+	-----------------------
+	There are 2 types of Token. (Request Token and Access Token)
+	Request token shall be shared between apps and it'll be store in the cookie by Joomla!
+	Foreach exapp requesting registration following procedure will be executed
+		if the request token in the cookie we just get it
+		otherwise we create a request_token and put it to the cookie
+		generate the access token 
+		Put both access_token,request_token,timestamp,appID,userID (if logged in) to the DB
+		send the request_token to the browser 
+		
+	Reset When user action changes
+	-----------------------
+	if user logged in or logged out following will be done..
+	it'll get the request token and neutralized it.. (timestamp=0)
+	and delete the request token from the cookie..
+		
