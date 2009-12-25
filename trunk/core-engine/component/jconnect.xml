@@ -20,6 +20,7 @@
 		<filename>controllers/auth.php</filename>
 		<filename>controllers/index.html</filename>
 		<filename>models/auth.php</filename>
+		<filename>models/token.php</filename>
 		<filename>views/auth/tmpl/default.php</filename>
 		<filename>views/auth/tmpl/index.html</filename>
 		<filename>views/auth/view.raw.php</filename>
