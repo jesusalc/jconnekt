@@ -10,17 +10,15 @@
  * accrodingly...
  */
 
-$url=$vars['url'];
-$jcLoginUrl=(substr($url,strlen($url)-1,1)=="/")? $url."action/logout": 
-	$url."/action/logout";
-	
- $jSession=$_COOKIE['jc_elgg_j_session'];
- $elggUser=$_SESSION['user']->username;
- JCFactory::getJConnect()->autoActiveSSO($jSession,$elggUser,$jcLoginUrl);
  
  ?>
  
  <?php if(!isloggedin()){?>
- <iframe height=0 width=0 src='http://localhost/jconnekt/joomla/?option=com_jconnect&controller=auth&task=request_token&app_name=Elgg&return_to=http://localhost/jconnekt/elgg/mod/elgg_jconnect/jconnect_api/auth_daemon.php?goto=<?php echo $_SERVER['REQUEST_URI']?>'></iframe>
-<?php }?>
+<div id='jconnekt_sso'></div>
+<script type="text/javascript" src="<?php echo $jconnekt_api_url;?>jconnekt.js"></script>
+<script type="text/javascript">
+	jconnekt.draw_sso('jconnekt_sso','<?php echo $_SERVER['REQUEST_URI'];?>'); 
+</script>
+ 
+ <?php }?>
 
