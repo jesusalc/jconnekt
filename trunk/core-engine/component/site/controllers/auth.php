@@ -24,8 +24,8 @@ class JconnectControllerAuth extends JController{
 
 	function display(){
 		
-		$callback=JRequest::getVar('callback');
-		$appName=JRequest::getVar('appName');
+		$callback=JRequest::getVar('return_to');
+		$appName=JRequest::getVar('app_name');
 		$session=JFactory::getSession();
 
 		$fault=loginAuthenticate($appName);
@@ -124,15 +124,67 @@ class JconnectControllerAuth extends JController{
 	}
 	
 	/**
+	 * 
+	 * Register the ExApp and take the request token and redirect to the given return_to url with.
+	 * the json='actual data as json'
+	 * @return unknown_type
+	 */
+	function request_token($data){
+		$appName=JRequest::getVar('app_name');
+		$return_to=JRequest::getVar('return_to');
+		try{
+			$exApp=new ExApp($appName);
+			$model=JModel::getInstance("token","JConnectModel");
+			$request_token=$model->get_request_token();
+			
+			$access_token=$model->generate_access_token($request_token,$exApp);
+			
+			$user=JFactory::getUser();
+			$state=($user->id)?"online":"offline";
+			$model->insert($access_token,$request_token,JCHelper::getAppID($appName),time(),$user->id);
+			
+			$rtn=array('state'=>$state,'request_token'=>$request_token);
+			
+			//sending redirect
+			if(strstr($return_to,"?")) $return_to.="&";
+			else $return_to.="?";
+			
+			header("Location: {$return_to}json=".json_encode($rtn));
+			
+		}
+		catch(Exception $ex){
+			var_dump(4,"Invalid External Application");
+		}
+	}
+	
+	/**
 	 * this will send the publicKey to the callBack URL;
 	 * @return unknown_type
 	 */
 	private function sendPublicKey($appName,$userID){
-		$model=$this->getModel('auth');
-		$publicKey=$model->getPublicKey($appName,$userID);
-		$callback=JFactory::getSession()->get('callback','','jconnect.auth');
-		$callback.="&publicKey=$publicKey";
-		$this->setRedirect($callback);
+		$return_to=JFactory::getSession()->get('callback','','jconnect.auth');		
+		try{
+			$exApp=new ExApp($appName);
+			$model=JModel::getInstance("token","JConnectModel");
+			$request_token=$model->get_request_token();
+			
+			$access_token=$model->generate_access_token($request_token,$exApp);
+			
+			$state=($userID)?"online":"offline";
+			$model->insert($access_token,$request_token,JCHelper::getAppID($appName),time(),$userID);
+			
+			$rtn=array('state'=>$state,'request_token'=>$request_token);
+			
+			//sending redirect
+			if(strstr($return_to,"?")) $return_to.="&";
+			else $return_to.="?";
+			
+			header("Location: {$return_to}json=".json_encode($rtn));
+			
+		}
+		catch(Exception $ex){
+			var_dump(4,"Invalid External Application");
+		}
 	}
 	
 	/**

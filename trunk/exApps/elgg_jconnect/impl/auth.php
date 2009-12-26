@@ -39,9 +39,12 @@ class JCElggAuth extends JCAuth{
 
 				// this will close the popup and
 				// reload the elgg homepage in the parent window...
+				//opener will be used if popup is there
+				//parent will be used for when iframe is used
 				global $CONFIG;
 				echo "<script type='text/javascript'>".
-			"opener.location.href='$CONFIG->url';".
+			"if(opener)opener.location.href='$CONFIG->url';".
+			"else if(parent)parent.window.location.href='".$_GET['goto']."'".
 			"</script>";
 			}
 		}
