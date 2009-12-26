@@ -61,4 +61,14 @@ class JconnectModelToken extends JModel {
 			throw new Exception($this->_db->getErrorMsg());
 		return true;	
 	}
+	
+	public function get_request_token(){
+		$request_token=$_COOKIE['jconnekt_token'];
+		if(!isset($request_token)){
+			$request_token=md5(rand());
+			setcookie('jconnekt_token',$request_token,null,"/");
+		}
+		
+		return $request_token;
+	}
 }

@@ -45,9 +45,11 @@ class JConnect{
 			$this->nonceManager->save();
 			$return_to.="$nonce";
 		}
+		
+		$return_to="http://localhost/jconnekt/elgg/mod/elgg_jconnect/jconnect_api/auth_daemon.php?goto={$_SERVER['REQUEST_URI']}";
 		$redirect_to=$this->joomla_path.
-			"/?option=com_jconnect&controller=auth&format=raw&appName={$this->appName}".
-			"&callback=$return_to";
+			"/?option=com_jconnect&controller=auth&format=raw&app_name={$this->appName}".
+			"&return_to=$return_to";
 		header("Location: $redirect_to");
 		exit(0);
 	}

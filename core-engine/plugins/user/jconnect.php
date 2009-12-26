@@ -87,8 +87,10 @@ class plgUserJconnect extends JPlugin {
 	}
 	
 	private function drop_jconnekt_token(){
-		include_once(JPATH_BASE.DS.'components/com_jconnect/models'.DS.'token.php');
+		@include_once(JPATH_BASE.DS.'components/com_jconnect/models'.DS.'token.php');
 		
+		//added to overcome executing this when admin logout /login proceeds..
+		if(!class_exists('JModel')) return; 
 		$jconnekt_token=$_COOKIE['jconnekt_token'];
 		if(isset($jconnekt_token)){
 			$model=JModel::getInstance("token","JConnectModel");

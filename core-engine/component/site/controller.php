@@ -48,7 +48,7 @@ class JconnectController extends JController
 class Endpoint{
 	//runs the endpoint
 	static function run(){
-		$registeredActions=array('createUser','updateUser','deleteUser','request_token','check_token','query');
+		$registeredActions=array('createUser','updateUser','deleteUser','check_token','query');
 		$action=JRequest::getCmd('action');
 		if(in_array($action,$registeredActions)){
 			$data=json_decode(JRequest::getString('json'),true);
@@ -272,37 +272,6 @@ class Methods{
 	}
 	
 	/**
-	 * 
-	 * Register the ExApp and take the request token.
-	 * @return unknown_type
-	 */
-	static function request_token($data){
-		$appName=$data['appName'];
-		try{
-			$exApp=new ExApp($appName);
-			$model=JModel::getInstance("token","JConnectModel");
-			$request_token=$_COOKIE['jconnekt_token'];
-			if(!isset($request_token)){
-				$request_token=md5(rand());
-				setcookie('jconnekt_token',$request_token,null,"/");
-			}
-			
-			$access_token=$model->generate_access_token($request_token,$exApp);
-			
-			$user=JFactory::getUser();
-			$state=($user->id)?"online":"offline";
-			$model->insert($access_token,$request_token,JCHelper::getAppID($appName),time(),$user->id);
-			
-			$rtn=array('state'=>$state,'request_token'=>$request_token);
-			Endpoint::returnResult($rtn);
-			
-		}
-		catch(Exception $ex){
-			return Endpoint::returnException(4,"Invalid External Application");
-		}
-	}
-	
-	/**
 		check the access token created using request token for the validity
 		if the token available nothing has been changed in the user - level
 		otherwise something has happened
@@ -323,11 +292,17 @@ class Methods{
 			$model=JModel::getInstance("token","JConnectModel");
 			$data=$model->get($access_token);
 			$user=JUser::getInstance((int)$data->user_id);
-			if($user->id){
-				$rtn['username']=$user->username;
-				$rtn['email']=$user->email;
-				$rtn['name']=$user->name;
-			} 
+			$userGroup=null;
+			//we are only sending userGroup for users not owned by current ExApp
+			if(!ExternalUser::contains($user->id)){
+				$userGroup=new JCGroupOut($res->appID,$user->usertype);
+			}
+			$rtn=array(
+				'username'=>$user->username,
+				'email'=>$user->email,
+				'user_group'=>$userGroup->exAppGroup,
+				'name'=>$user->name
+			);
 		}
 		
 		Endpoint::returnResult($rtn);
@@ -337,7 +312,7 @@ class Methods{
 		$model=JModel::getInstance("token","JConnectModel");
 		$data=$model->get($access_token);
 		$rtn=false;
-		$token_valid_time=100000;
+		$token_valid_time=10000000;
 		if(isset($data)){
 			$old_time=(int)$data->timestamp;
 			if((time()-$old_time)<$token_valid_time){
