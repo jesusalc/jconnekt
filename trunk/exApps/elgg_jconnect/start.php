@@ -21,6 +21,8 @@ function jconnect_init(){
 	
 	//the ajax version of login check...
 	extend_view('page_elements/footer','config/check');
+	
+	extend_view('metatags','config/metatags');
 
 	return true;
 }
