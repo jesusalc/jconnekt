@@ -9,7 +9,6 @@
  * This is used to check login state of given JOOMLA_SESSION and do the things 
  * accrodingly...
  */
-
 $url=$vars['url'];
 $jconnekt_api_url=(substr($url,strlen($url)-1,1)=="/")? $url."mod/elgg_jconnect/jconnect_api/": 
 	$url."/mod/elgg_jconnect/jconnect_api/";

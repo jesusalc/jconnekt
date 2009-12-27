@@ -105,6 +105,10 @@ register_elgg_event_handler('pagesetup','system','jconnect_pagesetup');
 //login using PAM
 
 function jconnect_logout($event,$obj_type,$user){
+	//clear the token
+	setcookie('jconnekt_request_token',0,null,"/");
+	unset($_COOKIE['jconnekt_request_token']);
+	
 	//logging out is done using a logout function provided by 
 	global $CONFIG;
 	JCFactory::getJConnect()->logout();	
@@ -167,6 +171,7 @@ function jconnect_update_user($hook,$obj_type,$rtn,$param){
 
 //this function is used to send the password to the Joomla after a user-sync...
 function jconnect_login($event,$obj_type,$user){
+	
 	try{
 		if(!$_SESSION['JC_LOGIN']){
 			JCFactory::getJoomla()->updateUser(

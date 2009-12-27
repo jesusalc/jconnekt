@@ -1,4 +1,9 @@
+var jconnekt_api_url;
+var jconnekt_ref;
+var sso_div_name;
 function JConnekt(app_name,api_url,joomla_url){
+	jconnekt_api_url=api_url;
+	jconnekt_ref=this;
 	this.draw_login=function(div_name){
 		var div=document.getElementById(div_name);
 		var return_to=api_url+"auth_daemon.php";
@@ -17,9 +22,12 @@ function JConnekt(app_name,api_url,joomla_url){
 		div.innerHTML="<iframe width=0 height=0 src='"+src_url+"'></iframe>";
 	};
 	
-	this.ajax_validator=function(){
-		
-	}
+	this.ajax_validator=function(div_name){
+		sso_div_name=div_name;
+		$(document).ready(function(){
+			check_token(null);
+		});
+	};
 }
 
 function popup_jconnekt(url,width,height){
@@ -27,4 +35,18 @@ function popup_jconnekt(url,width,height){
 	var left=screen.width/2-width/2;
 	
 	window.open(url,'Login','left='+left+',scrollbars=no,menubar=no,height=600,width=800,resizable=yes,toolbar=no,location=no,status=no');
+}
+
+function check_token(data){
+	if(data){
+		var res;
+		eval('res=' + data);
+		if(!res.valid){
+			jconnekt_ref.draw_sso(sso_div_name);
+		}
+		setTimeout("check_token(null)",5000);
+	}
+	else{
+		$.get(jconnekt_api_url+'auth_daemon.php?action=check_token',null,check_token);
+	}
 }

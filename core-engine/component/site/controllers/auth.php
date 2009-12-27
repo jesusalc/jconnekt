@@ -89,6 +89,7 @@ class JconnectControllerAuth extends JController{
 			$syncUser->status="OK";
 			$syncUser->save();
 			$this->sendPublicKey($appName,$user->id);
+			
 		}
 		else{
 			JFactory::getSession()->set('LOGIN_ERROR',$res->message);
@@ -162,6 +163,17 @@ class JconnectControllerAuth extends JController{
 	 * @return unknown_type
 	 */
 	private function sendPublicKey($appName,$userID){
+		//delete existing tokens
+		$jconnekt_token=$_COOKIE['jconnekt_token'];
+		if(isset($jconnekt_token)){
+			$model=JModel::getInstance("token","JConnectModel");
+			
+			//delete all token set by all exApps
+			$model->delete_by_request_token($jconnekt_token);
+			setcookie('jconnekt_token',0,time()-3600,"/");
+			unset($_COOKIE['jconnekt_token']);
+		}
+			
 		$return_to=JFactory::getSession()->get('callback','','jconnect.auth');		
 		try{
 			$exApp=new ExApp($appName);
