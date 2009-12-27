@@ -42,9 +42,10 @@ class JCElggAuth extends JCAuth{
 				//opener will be used if popup is there
 				//parent will be used for when iframe is used
 				global $CONFIG;
+				$goto=($_GET['goto'])?$_GET['goto']:$CONFIG->url;
 				echo "<script type='text/javascript'>".
 			"if(opener)opener.location.href='$CONFIG->url';".
-			"else if(parent)parent.window.location.href='".$_GET['goto']."'".
+			"else if(parent)parent.window.location.href='".$CONFIG->url."'".
 			"</script>";
 			}
 		}
@@ -77,7 +78,9 @@ class JCElggAuth extends JCAuth{
 		session_destroy();
 		setcookie("jc_elgg_j_session", "", (time()-(86400 * 30)),"/");
 
-		header("Location: $CONFIG->url");
+		echo "<script type='text/javascript'>".
+			"if(parent)parent.window.location.href='".$CONFIG->url."'".
+			"</script>";
 		return true;
 	}
 }
