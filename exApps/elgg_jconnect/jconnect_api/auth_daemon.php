@@ -7,6 +7,7 @@ if($_GET['action']=='check_token'){
 	$rtn=array('valid'=>true);
 	$valid=JCFactory::getJoomla()->check_token($access_token);
 	
+	//we check $valid's availability to fix looping page refreshes..
 	if($valid && !$valid['valid']){
 		$rtn['valid']=false;
 	}
@@ -21,8 +22,9 @@ else{
 	echo 'force headers to be sent';
 	
 	if($response['state']=="online"){
+		$joomla_url=JCFactory::getJConnect()->joomla_path;
 		$access_token=hash_hmac("md5",$response['request_token'],JCFactory::getAuthKey());
-		$res=file('http://localhost/jconnekt/joomla/?option=com_jconnect&action=query&json={"access_token":"'.$access_token.'"}');
+		$res=file($joomla_url . '?option=com_jconnect&action=query&json={"access_token":"'.$access_token.'"}');
 		$res=json_decode($res[0],true);
 		$res=$res['data'];
 		

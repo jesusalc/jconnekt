@@ -12,8 +12,6 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 require_once( JPATH_COMPONENT.DS.'helpers'.DS.'initServer.php' );
 
-include_once(JPATH_COMPONENT_SITE.DS.'tables'.DS.'TableTokens.php');
-
 
 jimport('joomla.application.component.controller');
 
