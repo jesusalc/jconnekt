@@ -7,7 +7,7 @@ if($_GET['action']=='check_token'){
 	$rtn=array('valid'=>true);
 	$valid=JCFactory::getJoomla()->check_token($access_token);
 	
-	if(!$valid['valid']){
+	if($valid && !$valid['valid']){
 		$rtn['valid']=false;
 	}
 	
@@ -27,7 +27,7 @@ else{
 		$res=$res['data'];
 		
 		JCFactory::$auth->login(true,$res);
-	}else{
+	}else {
 		JCFactory::$auth->logout();
 	}
 }

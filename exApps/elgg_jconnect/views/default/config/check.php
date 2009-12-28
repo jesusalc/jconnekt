@@ -14,7 +14,7 @@
  ?>
 <div id='jconnekt_sso'></div>
 <script type="text/javascript">
-	setTimeout(jconnekt.ajax_validator('jconnekt_sso'),5000);
+	setTimeout(jconnekt.ajax_validator('jconnekt_sso','<?php echo $_SERVER['REQUEST_URI'];?>'),5000);
 </script> 
  <?php if(!$_COOKIE['jconnekt_request_token']){?>
 <script type="text/javascript" src="<?php echo $jconnekt_api_url;?>jconnekt.js"></script>
