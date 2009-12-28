@@ -45,7 +45,7 @@ class JCElggAuth extends JCAuth{
 				$goto=($_GET['goto'])?$_GET['goto']:$CONFIG->url;
 				echo "<script type='text/javascript'>".
 			"if(opener)opener.location.href='$CONFIG->url';".
-			"else if(parent)parent.window.location.href='".$CONFIG->url."'".
+			"else if(parent)parent.window.location.href='".$goto."'".
 			"</script>";
 			}
 		}

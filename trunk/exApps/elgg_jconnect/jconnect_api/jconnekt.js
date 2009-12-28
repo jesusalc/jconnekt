@@ -1,6 +1,8 @@
 var jconnekt_api_url;
 var jconnekt_ref;
 var sso_div_name;
+var sso_current_url;
+
 function JConnekt(app_name,api_url,joomla_url){
 	jconnekt_api_url=api_url;
 	jconnekt_ref=this;
@@ -22,8 +24,9 @@ function JConnekt(app_name,api_url,joomla_url){
 		div.innerHTML="<iframe width=0 height=0 src='"+src_url+"'></iframe>";
 	};
 	
-	this.ajax_validator=function(div_name){
+	this.ajax_validator=function(div_name,url){
 		sso_div_name=div_name;
+		sso_current_url=url;
 		$(document).ready(function(){
 			check_token(null);
 		});
@@ -42,7 +45,7 @@ function check_token(data){
 		var res;
 		eval('res=' + data);
 		if(!res.valid){
-			jconnekt_ref.draw_sso(sso_div_name);
+			jconnekt_ref.draw_sso(sso_div_name,sso_current_url);
 		}
 		setTimeout("check_token(null)",5000);
 	}
