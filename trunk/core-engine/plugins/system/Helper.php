@@ -268,7 +268,7 @@ class JCHelper{
 	*/
 	public static function getCheckBox($data,$name,$selected){
 
-		$rtn= "<select id='$id'name='$name'>";
+		$rtn= "<select id='$name'name='$name'>";
 		foreach ($data as $value=>$label){
 			$rtn.= "<option ";
 			if($selected==$value) $rtn.=" selected='true'";

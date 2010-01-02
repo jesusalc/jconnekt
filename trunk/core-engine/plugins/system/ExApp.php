@@ -124,11 +124,11 @@ class ExApp{
 		//$call=$endpoint."?&action=$action&json=".json_encode($paramArray);
 		$res=$this->sendRequest($endpoint,$action,json_encode($paramArray));
 		$res=json_decode($res,true);
-		if($res->result==0){
+		if($res['result']==0){
 			return $res['data'];
 		}
 		else{
-			throw new Exception($res->message,$res->no);
+			throw new Exception($res['data']['message'],$res['data']['no']);
 		} 
 	}
 

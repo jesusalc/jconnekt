@@ -15,7 +15,7 @@ class JconnectViewJconnect extends JView{
 	public function display($tmp=null){
 		JToolBarHelper::title("JConnect","generic.png");
 		JToolBarHelper::cancel("cancel",JText::_('CLOSE'));
-		parent::display($tmpl);
+		parent::display($tmp);
 	}
 }
  
