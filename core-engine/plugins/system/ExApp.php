@@ -124,12 +124,16 @@ class ExApp{
 		//$call=$endpoint."?&action=$action&json=".json_encode($paramArray);
 		$res=$this->sendRequest($endpoint,$action,json_encode($paramArray));
 		$res=json_decode($res,true);
-		if($res['result']==0){
+		
+		if(isset($res) && $res['result']==0){
 			return $res['data'];
 		}
-		else{
+		else if((isset($res))){
 			throw new Exception($res['data']['message'],$res['data']['no']);
 		} 
+		else{
+			throw new Exception("Connection Details Invalid!",2);
+		}
 	}
 
 	/**
@@ -154,8 +158,8 @@ class ExApp{
 	        
 		}
 		else{
-			$res=file("{$endpoint}?&action=$action&json=$json");
-			$res=stripslashes(implode("\n",$res));
+			@$res=file("{$endpoint}?&action=$action&json=$json");
+			@$res=stripslashes(implode("\n",$res));
 			
 		}
 		
