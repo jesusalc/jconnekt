@@ -21,16 +21,18 @@ class ExternalUser{
 
 	public function __construct($JID=null){
 		$this->db=JFactory::getDBO();
+		$this->JID=$JID;
 		if($JID==null ) return;
 		$sql="SELECT * FROM #__jc_externalUsers WHERE JID=$JID";
 		$this->db->setQuery($sql);
 		$res=$this->db->loadObject();
 		if($this->db->getErrorNum()) throw new Exception($this->db->getErrorMsg());
-
-		$this->ownerAppID=$res->ownerAppID;
-		$this->JID=$JID;
-		$this->username=$res->username;
-		$this->needSync=$res->needSync;
+		
+		if(isset($res)){
+			$this->ownerAppID=$res->ownerAppID;
+			$this->username=$res->username;
+			$this->needSync=$res->needSync;
+		}
 	}
 
 	public function save(){

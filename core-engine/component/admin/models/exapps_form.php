@@ -45,9 +45,9 @@ class JconnectModelExapps_form extends JModel{
 		$meta->allow_incoming=JCHelper::getMeta($appID,"allow_incoming");
 		$meta->allow_outgoing=JCHelper::getMeta($appID,"allow_outgoing");
 		
-		if(!$meta->recursive_insert) $meta->recursive_insert="allow"; //deny
-		if(!$meta->recursive_delete) $meta->recursive_delete="deny"; //allow
-		if(!$meta->username_conflict) $meta->username_conflict="update"; //ignore
+		if(isset($meta->recursive_insert)) $meta->recursive_insert="allow"; //deny
+		if(isset($meta->recursive_delete)) $meta->recursive_delete="deny"; //allow
+		if(isset($meta->username_conflict)) $meta->username_conflict="update"; //ignore
 		
 		return $meta;
 	}

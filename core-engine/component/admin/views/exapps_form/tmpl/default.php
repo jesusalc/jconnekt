@@ -72,7 +72,7 @@
 					    	</table>
 		        		</td>
 		        		<td >
-		        			<?php if($this->exApp->appID>0) {?>
+		        			<?php if(isset($this->exApp->appID) && $this->exApp->appID>0) {?>
 		        			<div style='width:200px;margin:auto;'>
 		        				<a href='index.php?option=com_jconnect&controller=exApps&task=sendInfo&appID=<?php echo $this->exApp->appID;?>'><font size='6'><?php echo JText::_('SEND_INFO');?></font></a> 
 		        			</div>
@@ -84,6 +84,7 @@
 		</div>
 		</td>
 		<td>
+			<?php if(isset($this->exApp->appID) && !(isset($this->isError))) {?>
 			<div class="col100">
 		    <fieldset class="adminform">
 		        <legend><?php echo JText::_( 'ADVANCED_CTRL' ); ?></legend>
@@ -95,7 +96,7 @@
 		                </label>
 		            </td>
 		            <td>
-		                <input type="text" class="text" name="meta[IP]" value="<?php echo $this->meta->IP?>"/>
+		                <input type="text" class="text" name="meta[IP]" value="<?php echo (isset($this->meta->IP))?$this->meta->IP:"";?>"/>
 		            </td>
 		         </tr>
 		         <tr>
@@ -162,9 +163,10 @@
 		    </table>
 		    </fieldset>
 		</div>
+		<?php }?>
 		</td>
 	</tr>
-	<?php if($this->jcGroupInMap){?>
+	<?php if(isset($this->jcGroupInMap) && !isset($this->isError)){?>
 	<tr>
 		<td>
 			<div class="col100">
@@ -218,7 +220,7 @@
 		    </div>
 		</td>
 	</tr>
-	<?php }?>t
+	<?php }?>
 	
 </table>
 
@@ -228,11 +230,13 @@
 
  
 <input type="hidden" name="option" value="com_jconnect" />
-<input type="hidden" name="appID" value="<?php echo $this->exApp->appID; ?>" />
 <input type="hidden" name="task" value="" />
+<input type="hidden" name="controller" value="exApps"/>
+<?php if(isset($this->exApp->appID) && !isset($this->isError)){?>
 <input type="hidden" name="meta[allow_incoming]" id="meta_allow_incoming" value="<?php echo $this->meta->allow_incoming;?>" />
 <input type="hidden" name="meta[allow_outgoing]" id="meta_allow_outgoing" value="<?php echo $this->meta->allow_outgoing;?>" />
-<input type="hidden" name="controller" value="exApps"/>
+<input type="hidden" name="appID" value="<?php echo $this->exApp->appID; ?>" />
+<?php }?>
 </form>
 
 <script type="text/javascript">
@@ -285,4 +289,4 @@
 	document.getElementById("allow_incoming").checked=<?php echo (isset($this->meta->allow_incoming))?$this->meta->allow_incoming:1;?>;
 	document.getElementById("allow_outgoing").checked=<?php echo (isset($this->meta->allow_outgoing))?$this->meta->allow_outgoing:1;?>;
 	
-</script>"
+</script>
