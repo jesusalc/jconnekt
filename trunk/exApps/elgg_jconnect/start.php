@@ -12,7 +12,7 @@ include_once 'jconnect_api/api.php';
 function jconnect_init(){ 
 
 	register_page_handler('jconnect','jconnect_page_handler');
-	jc_set_sessoins();
+	//jc_set_sessoins();
 	//jc_login_check();
 	extend_view('css','config/css');
 	
@@ -72,13 +72,12 @@ function jc_set_sessoins(){
 				$code = md5($code);
 				unset($_SESSION['guid']);//$_SESSION['guid'] = 0;
 				unset($_SESSION['id']);//$_SESSION['id'] = 0;
-				if ($user = get_user_by_code($code)) {
+				/*if ($user = get_user_by_code($code)) {
 					$_SESSION['user'] = $user;
 					$_SESSION['id'] = $user->getGUID();
 					$_SESSION['guid'] = $_SESSION['id'];
 					$_SESSION['code'] = $_COOKIE['jc_elgg'];
-				}
-				
+				}*/ 
 				setcookie('jc_elgg',0,time()-3600,"/");
 			}
 		}
