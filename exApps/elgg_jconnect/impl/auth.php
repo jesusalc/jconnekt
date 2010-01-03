@@ -23,10 +23,10 @@ class JCElggAuth extends JCAuth{
 					$user->email=$data['email'];
 				}
 
-				//to prevent call's joomla's updateUser in the login-hook..
-				$_SESSION['JC_LOGIN']=true;
+				//to tell system that user logged via JConnekt
+				$_SESSION['JCONNEKT_LOGIN']=true;
 				$res=login($user,false);
-				unset($_SESSION['JC_LOGIN']);
+				
 				if($data['user_group']){
 					$type=($data['user_group']=='admin')?'yes':null;
 					$user->admin=$type;
@@ -35,8 +35,6 @@ class JCElggAuth extends JCAuth{
 				//to tell elgg in the next time that I've logged in...
 				setcookie("jc_elgg",$_SESSION['code'],0,"/");
 				setcookie("jc_elgg_j_session",$data['session_id'],0,"/");
-				var_dump($data['session_id']);
-
 				// this will close the popup and
 				// reload the elgg homepage in the parent window...
 				//opener will be used if popup is there
