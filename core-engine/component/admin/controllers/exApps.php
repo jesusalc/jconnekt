@@ -143,8 +143,17 @@ class JconnectControllerExApps extends JController
 			if (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') {
 				$scheme .= 's';
 			}
-				
-			$url="$scheme://".getenv('HTTP_HOST').":".getenv('SERVER_PORT').str_replace("/administrator","",getenv('SCRIPT_NAME'));
+
+		
+			$refferer=$_SERVER[HTTP_REFERER];
+			
+			$refferer=preg_replace("/$scheme:\/\//","",$refferer);
+			
+			$domain=preg_replace("/\/.*/","",$refferer);
+			
+			
+			$url="$scheme://".$domain.":".getenv('SERVER_PORT').str_replace("/administrator","",getenv('SCRIPT_NAME'));
+			
 			$meta=array(
 				"JOOMLA_URL"=>$url,
 				"JC_APPNAME"=>$appName
