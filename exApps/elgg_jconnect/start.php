@@ -12,8 +12,6 @@ include_once 'jconnect_api/api.php';
 function jconnect_init(){ 
 
 	register_page_handler('jconnect','jconnect_page_handler');
-	//jc_set_sessoins();
-	//jc_login_check();
 	extend_view('css','config/css');
 	
 	//add the jconnect login form to the login area...
@@ -25,28 +23,6 @@ function jconnect_init(){
 	extend_view('metatags','config/metatags');
 
 	return true;
-}
-
-//this checks the login state of the JOOMLA_SESSION in elgg session and do the
-//necessary actions.
-// this is depricated but need to use coz ajax redirect pretty much slow..
-// (slow in user processing)
-function jc_login_check(){
-	global $CONFIG;
-	
-	$jSession=$_SESSION['JOOMLA_SESSION'];
-	
-	if($jSession){
-		//user currently logged into joomla in JOOMLA_SESSION sessionid value
-		$user=$CONFIG->joomla->getUserBySession("$jSession");
-		$elggUser=$_SESSION['user']->username;
-		if($user==null){
-			header('Location: action/logout');
-		}
-		else if($user!=$elggUser){
-			header('Location: pg/jconnect/login');
-		}
-	}
 }
 
 function jconnect_page_handler($page){
@@ -63,31 +39,6 @@ function jconnect_pagesetup()
 	}
 } 
 
-
-function jc_set_sessoins(){
-	try{
-		if (empty($_SESSION['guid'])) {
-			if (isset($_COOKIE['jc_elgg'])) {
-				$code = $_COOKIE['jc_elgg'];
-				$code = md5($code);
-				unset($_SESSION['guid']);//$_SESSION['guid'] = 0;
-				unset($_SESSION['id']);//$_SESSION['id'] = 0;
-				/*if ($user = get_user_by_code($code)) {
-					$_SESSION['user'] = $user;
-					$_SESSION['id'] = $user->getGUID();
-					$_SESSION['guid'] = $_SESSION['id'];
-					$_SESSION['code'] = $_COOKIE['jc_elgg'];
-				}*/ 
-				setcookie('jc_elgg',0,time()-3600,"/");
-			}
-		}
-	}
-	catch(Exception $x){
-		var_dump($x);
-	}
-
-	return true;
-}
 
 
 // Initialise JConnect....

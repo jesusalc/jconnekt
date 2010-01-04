@@ -32,9 +32,7 @@ class JCElggAuth extends JCAuth{
 					$user->admin=$type;
 					$user->save();
 				}
-				//to tell elgg in the next time that I've logged in...
-				setcookie("jc_elgg",$_SESSION['code'],0,"/");
-				setcookie("jc_elgg_j_session",$data['session_id'],0,"/");
+				
 				// this will close the popup and
 				// reload the elgg homepage in the parent window...
 				//opener will be used if popup is there
