@@ -3,14 +3,25 @@ include "api.php";
 
 if($_GET['action']=='check_token'){
 	$request_token=$_COOKIE['jconnekt_request_token'];
-	$access_token=hash_hmac("md5",$request_token,JCFactory::getAuthKey());
-	$rtn=array('valid'=>true);
-	$valid=JCFactory::getJoomla()->check_token($access_token);
 	
-	//we check $valid's availability to fix looping page refreshes..
-	if($valid && !$valid['valid']){
-		$rtn['valid']=false;
+	//if jconnekt_token is there and is the same that means Joomla! is logged in and no any changes 
+	//made in user activities....
+	//so in the same domain we dont need to request following rest thing to check sso state
+	$rtn=array('valid'=>true);
+	if(isset($_COOKIE['jconnekt_token'])){
+		$jconnekt_token=$_COOKIE['jconnekt_token'];
+		if($jconnekt_token!=$request_token) $rtn['valid']=false;
 	}
+	else{
+		$access_token=hash_hmac("md5",$request_token,JCFactory::getAuthKey());
+		$valid=JCFactory::getJoomla()->check_token($access_token);
+		
+		//we check $valid's availability to fix looping page refreshes..
+		if($valid && !$valid['valid']){
+			$rtn['valid']=false;
+		}
+	}
+	
 	
 	echo json_encode($rtn);
 }
