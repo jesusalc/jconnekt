@@ -3,9 +3,8 @@
 
 	<property name="src" value="." />
 	<property name="core" value="${src}/core-engine" />
-	<property name="joomla" value="../joomla" /> 
-	<property name="elgg" value="../elgg" /> 
-	<property name="dist" value="../dist" /> 
+	<property name="joomla" value="../joomla/1.0.2" /> 
+	<property name="elgg" value="../elgg/1.0.2" /> 
 	<property name="extensionDir" value="${core}/component/admin/ext" />
 
 	<fileset dir="${src}" id="whole">
@@ -18,6 +17,7 @@
 		<exclude name="**/.*" />
 		<exclude name="**/Test*" />
 	</fileset>   
+	
 	<fileset dir="${core}/component/admin" id="admin-comp">
 		<include name="**" />
 		<exclude name="**/.*" />  
