@@ -123,6 +123,7 @@ class ExApp{
 		$endpoint="http://{$this->host}:{$this->port}{$this->path}";
 		//$call=$endpoint."?&action=$action&json=".json_encode($paramArray);
 		$res=$this->sendRequest($endpoint,$action,json_encode($paramArray));
+		
 		$res=json_decode($res,true);
 		
 		if(isset($res) && $res['result']==0){

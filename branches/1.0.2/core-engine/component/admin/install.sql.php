@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS `#__jc_exApps` (
   `secretKey` varchar(64) NOT NULL,
-  `host` varchar(50) NOT NULL,
-  `path` varchar(50) NOT NULL,
-  `port` varchar(50) NOT NULL,
+  `host` varchar(255) NOT NULL,
+  `path` varchar(500) NOT NULL,
+  `port` varchar(6) NOT NULL,
   `appID` int(11) NOT NULL AUTO_INCREMENT,
   `appName` varchar(50) NOT NULL,
   `published` tinyint(4) NOT NULL DEFAULT '1',
