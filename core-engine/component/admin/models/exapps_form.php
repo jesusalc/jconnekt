@@ -56,6 +56,16 @@ class JconnectModelExapps_form extends JModel{
 		$appID=JRequest::getInt("appID");
 		
 		$meta=JRequest::getVar("meta",array(),"post","array");
+		if(empty($meta)){
+			$meta=array();
+			$meta['allow_outgoing']=1;
+			$meta['allow_incoming']=1;
+			$meta['update_user']='allow';
+			$meta['create_user']='allow';
+			$meta['delete_user']='allow';
+			$meta['IP']='';
+		}
+		
 		foreach($meta as $metaKey=>$metaVal){
 			JCHelper::setMeta((int)$appID,$metaKey,$metaVal);
 		}

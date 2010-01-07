@@ -20,6 +20,7 @@ class JCHelper{
 	public static function isExAppEnabled($appID,$place=null){
 		if(is_string($appID)) $appID=JCHelper::getAppID($appID);
 		else if(!isset($appID)) $appID=0;
+		
 		$db=JFactory::getDBO();
 		$sql="SELECT published FROM #__jc_exApps WHERE appID=$appID";
 		$db->setQuery($sql);
