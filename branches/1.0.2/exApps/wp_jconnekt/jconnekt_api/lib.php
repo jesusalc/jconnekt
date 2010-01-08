@@ -29,6 +29,8 @@ class JCFactory{
 	public static $secKey;
 	public static $appName;
 	public static $joomla_url;
+	public static $app_url;
+	public static $api_url;
 
 	/**
 	 * Object of JCUserSync class
@@ -118,6 +120,36 @@ class JCFactory{
 			}
 		}
 		return JCFactory::$jconnect;
+	}
+	
+	/**
+	 * 
+	 * This will load Javascript library getting all the parameters from the API
+	 * 
+	 * @param $caller_filename some times in some apps we don't have to goto jconnekt API directly
+	 * so at those we go through our own file located in the app root . so this is that file's anme
+	 */
+	public static function load_js_library($caller_filename=null){
+		$url=JCFactory::$app_url;
+		$jconnekt_api_url=JCFactory::$api_url;
+		$joomla_url=JCFactory::getJConnect()->joomla_path;
+		$app_name=JCFactory::getJConnect()->appName;
+		$app_url=JCFactory::$app_url;
+		
+		if(!substr($joomla_url,strlen($joomla_url)-1,1)=="/") $joomla_url.="/";
+		if(!substr($jconnekt_api_url,strlen($jconnekt_api_url)-1,1)=="/") $jconnekt_api_url.="/";
+		if(!substr($app_url,strlen($app_url)-1,1)=="/") $app_url.="/";
+		
+		$caller_url='';
+		if($caller_filename){
+			$caller_url=$app_url.$caller_filename;
+		}
+				
+		echo "<script type='text/javascript' src='{$jconnekt_api_url}jconnekt.js'></script>";
+		echo 
+			"<script type='text/javascript'>".
+			"var jconnekt=new JConnekt('$app_name','$jconnekt_api_url','$joomla_url','$caller_url')".
+			"</script>";
 	}
 }
 
@@ -239,6 +271,28 @@ class JCAuth{
 	public function logout(){
 		throw new Exception("Not Implemented",1024);
 	}
+	
+	/**
+		@param $popup_url- url is going to refresh the opener when used a popup
+		@param $self_url - url which is going to refresh the page when goes via iframe
+	 */
+	protected function end_login($popup_url,$iframe_url){
+		echo "<script type='text/javascript'>".
+			"if(opener){".
+			"opener.location.href='$popup_url'; ".
+			"window.close();".
+			"}".
+			"else if(parent)parent.window.location.href='".$iframe_url."'".
+			"</script>";
+	}
+	
+	protected function end_logout($redirect_url){
+		echo "<script type='text/javascript'>".
+			"if(parent)parent.window.location.href='".$redirect_url."'".
+			"</script>";
+	}
+	
+	
 }
 
 class NonceManager{

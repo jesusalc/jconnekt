@@ -15,10 +15,11 @@ include_once dirname(dirname(__FILE__)).'/impl/auth.php';
 /**
  * Basic details...
  */
-JCFactory::register('secKey','PU1TDsFnByRxcO5l1OAfuijKWUZSG7Uv::ZIU3NCMeR1Hd0eUERfyw5nQH');
+JCFactory::register('secKey','xfrhBj9Ofu0X2J5WNBqIJDIGs1sKjG0T::3r6PusEdJDUNly4MRvHVjcwL5');
 JCFactory::register('appName','wp');
 JCFactory::register('joomla_url','http://localhost/jconnekt/joomla/1.0.2/');
-
+JCFactory::register('app_url','http://localhost/jconnekt/wp/1.0.2/');
+JCFactory::register('api_url','http://localhost/jconnekt/wp/1.0.2/wp-content/plugins/wp_jconnekt/jconnekt_api/');
 /**
  * assion subclass of JCUserSync
  */
@@ -32,6 +33,6 @@ JCFactory::register('misc',new JCElggMisc());
 /**
  * assion subclass of JCAuth
  */
-JCFactory::register('auth',new JCElggAuth());
+JCFactory::register('auth',new JCWPAuth());
 
 ?>

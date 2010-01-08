@@ -21,7 +21,7 @@ class Endpoint{
 		$action=mysql_escape_string($_GET['action']);
 		
 		if($action && in_array($action,$registeredActions)){
-			$data=json_decode(stripslashes(mysql_escape_string($_GET['json'])),true);
+			$data=json_decode(stripslashes($_GET['json']),true);
 			try{
 				$action($data);
 			}
@@ -270,6 +270,7 @@ class Fault{
  */
 function checkValidity($hmac_hash,$params,$salt){
 	$hmac_hash_local=hmac_gen($params,JCFactory::getAuthKey(),$salt);
+	
 	if($hmac_hash!=$hmac_hash_local){
 		return false;
 	}
