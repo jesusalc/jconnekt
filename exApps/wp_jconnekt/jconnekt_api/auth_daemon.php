@@ -35,7 +35,7 @@ else if($_GET['action']=='logout_return'){
 else{
 	//used to login by JConnekt Login or via SSO Login
 	$response=json_decode(stripslashes($_GET['json']),true);
-	setcookie('jconnekt_request_token',$response['request_token'],null,"/");
+	JCFactory::getJConnect()->createLocalToken($response['request_token']);
 	
 	if($response['state']=="online"){
 		$joomla_url=JCFactory::getJConnect()->joomla_path;

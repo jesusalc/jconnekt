@@ -71,5 +71,5 @@ CREATE TABLE IF NOT EXISTS `#__jc_tokens` (
   `timestamp` bigint(11) NOT NULL,
   `access_token` varchar(32) NOT NULL,
   `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`request_token`)
+  PRIMARY KEY (`request_token`,`access_token`)
 ) ;
