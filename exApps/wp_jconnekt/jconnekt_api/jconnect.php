@@ -61,6 +61,7 @@ class JConnect{
 		header("Location: $redirect_to");
 		exit(0);
 	}
+	
 
 	/**
 	 *

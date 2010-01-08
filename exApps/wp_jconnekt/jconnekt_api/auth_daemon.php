@@ -22,15 +22,11 @@ if($_GET['action']=='check_token'){
 		}
 	}
 	
-	
 	echo json_encode($rtn);
 }
 else{
 	$response=json_decode(stripslashes($_GET['json']),true);
 	setcookie('jconnekt_request_token',$response['request_token'],null,"/");
-	
-	//force headers to be sent
-	echo 'force headers to be sent';
 	
 	if($response['state']=="online"){
 		$joomla_url=JCFactory::getJConnect()->joomla_path;
