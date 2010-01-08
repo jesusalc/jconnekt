@@ -223,6 +223,6 @@ class JconnectControllerAuth extends JController{
 		$callback=JRequest::getVar("callback");		
 		global $mainframe;
 		$mainframe->logout();
-		$this->setRedirect($callback);
+		$this->setRedirect(urldecode($callback));
 	}
 }

@@ -1,6 +1,10 @@
 <?php
+/**
+ * This handles all the authentication stuff
+ */
 include "api.php";
 
+//used in auto active single sign on
 if($_GET['action']=='check_token'){
 	$request_token=$_COOKIE['jconnekt_request_token'];
 	
@@ -24,7 +28,12 @@ if($_GET['action']=='check_token'){
 	
 	echo json_encode($rtn);
 }
+else if($_GET['action']=='logout_return'){
+	header("Location: ".JCFactory::$app_url);
+	echo "header sent";
+}
 else{
+	//used to login by JConnekt Login or via SSO Login
 	$response=json_decode(stripslashes($_GET['json']),true);
 	setcookie('jconnekt_request_token',$response['request_token'],null,"/");
 	
