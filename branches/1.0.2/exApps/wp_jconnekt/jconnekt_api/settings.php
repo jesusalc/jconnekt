@@ -20,6 +20,9 @@ JCFactory::register('appName','wp');
 JCFactory::register('joomla_url','http://localhost/jconnekt/joomla/1.0.2/');
 JCFactory::register('app_url','http://localhost/jconnekt/wp/1.0.2/');
 JCFactory::register('api_url','http://localhost/jconnekt/wp/1.0.2/wp-content/plugins/wp_jconnekt/jconnekt_api/');
+JCFactory::register('caller','jconnekt.php');
+
+
 /**
  * assion subclass of JCUserSync
  */

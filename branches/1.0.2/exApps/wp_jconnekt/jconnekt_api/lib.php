@@ -31,6 +31,10 @@ class JCFactory{
 	public static $joomla_url;
 	public static $app_url;
 	public static $api_url;
+	/**
+	 * if we cannot load the Engine outside the site root we go through this script
+	 */
+	public static $caller;
 
 	/**
 	 * Object of JCUserSync class
@@ -129,7 +133,8 @@ class JCFactory{
 	 * @param $caller_filename some times in some apps we don't have to goto jconnekt API directly
 	 * so at those we go through our own file located in the app root . so this is that file's anme
 	 */
-	public static function load_js_library($caller_filename=null){
+	public static function load_js_library(){
+		$caller_filename=JCFactory::$caller;
 		$url=JCFactory::$app_url;
 		$jconnekt_api_url=JCFactory::$api_url;
 		$joomla_url=JCFactory::getJConnect()->joomla_path;

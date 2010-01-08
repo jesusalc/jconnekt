@@ -55,7 +55,19 @@ class JConnect{
 	}
 	
 	public function logout(){
-		$return_to=$this->getReturnTo()."?logout=true";
+		$jconnekt_api_url=JCFactory::$api_url;
+		if(!substr($jconnekt_api_url,strlen($jconnekt_api_url)-1,1)=="/") $jconnekt_api_url.="/";
+		
+		$return_to=$jconnekt_api_url."auth_daemon.php?action=logout_return";
+	
+		if(isset(JCFactory::$caller)){
+			$app_url=JCFactory::$app_url;
+			if(!substr($app_url,strlen($app_url)-1,1)=="/") $app_url.="/";
+			$return_to="{$app_url}jconnekt.php?go=auth_daemon.php&action=logout_return";
+		}
+		
+		$return_to=urlencode($return_to);
+		
 		$redirect_to=$this->joomla_path."/?option=com_jconnect&controller=auth&".
 			"task=logout&callback=$return_to";
 		header("Location: $redirect_to");
@@ -98,6 +110,29 @@ class JConnect{
 
 		if($redirect) header("Location: $redirect");
 
+	}
+	
+	/*
+	 * creates the JConnekt Request Token locally in the cookies
+	 */
+	public function createLocalToken($request_token){
+		$appName=JCFactory::$appName;
+		setcookie("{$appName}_jconnekt_request_token",$request_token,null,"/");
+	}
+	
+	
+	public function deleteLocalToken(){
+		$appName=JCFactory::$appName;
+		setcookie("{$appName}_jconnekt_request_token",$request_token,time()-3600,"/");
+	}
+	
+	/**
+	 * Get the Token from the Cookies
+	 * @return String
+	 */
+	public function getLocalToken(){
+		$appName=JCFactory::$appName;
+		return $_COOKIE["{$appName}_jconnekt_request_token"];
 	}
 
 	/**
