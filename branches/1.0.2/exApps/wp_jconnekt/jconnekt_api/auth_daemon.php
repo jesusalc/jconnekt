@@ -6,7 +6,7 @@ include "api.php";
 
 //used in auto active single sign on
 if($_GET['action']=='check_token'){
-	$request_token=$_COOKIE['jconnekt_request_token'];
+	$request_token=JCFactory::getJConnect()->getLocalToken();
 	
 	//if jconnekt_token is there and is the same that means Joomla! is logged in and no any changes 
 	//made in user activities....
@@ -36,7 +36,6 @@ else{
 	//used to login by JConnekt Login or via SSO Login
 	$response=json_decode(stripslashes($_GET['json']),true);
 	JCFactory::getJConnect()->createLocalToken($response['request_token']);
-	
 	if($response['state']=="online"){
 		$joomla_url=JCFactory::getJConnect()->joomla_path;
 		$access_token=hash_hmac("md5",$response['request_token'],JCFactory::getAuthKey());
@@ -46,6 +45,7 @@ else{
 		
 		JCFactory::$auth->login(true,$res);
 	}else {
+		
 		JCFactory::$auth->logout();
 	}
 }

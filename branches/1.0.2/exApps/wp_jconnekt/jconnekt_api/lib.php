@@ -126,6 +126,15 @@ class JCFactory{
 		return JCFactory::$jconnect;
 	}
 	
+	public static function isJConnektSession(){
+		$token=JCFactory::getJConnect()->getLocalToken();
+		if(isset($token)){
+			return true;
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * 
 	 * This will load Javascript library getting all the parameters from the API
@@ -281,7 +290,7 @@ class JCAuth{
 		@param $popup_url- url is going to refresh the opener when used a popup
 		@param $self_url - url which is going to refresh the page when goes via iframe
 	 */
-	protected function end_login($popup_url,$iframe_url){
+	protected function end_login($popup_url,$iframe_url){		
 		echo "<script type='text/javascript'>".
 			"if(opener){".
 			"opener.location.href='$popup_url'; ".

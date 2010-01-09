@@ -22,12 +22,24 @@ function jconnekt_js(){
 
 function draw_login(){
 	echo "<div id='jconnekt_login_box'></div>";
-	echo "<script>jconnekt.draw_login('jconnekt_login_box')</script>";
+	echo "<script type='text/javascript'>jconnekt.draw_login('jconnekt_login_box')</script>";
+	
+	//draw sso component
+	$b=null;
+	$cookie=JCFactory::getJConnect()->getLocalToken();
+	var_dump(JCFactory::isJConnektSession());
+	if(!is_user_logged_in() || JCFactory::isJConnektSession()){
+		echo "<div id='jconnekt_sso_box'></div>";
+		echo "<script type='text/javascript'>setTimeout(\""."jconnekt.ajax_validator('jconnekt_sso_box','". $_SERVER['REQUEST_URI'] ."'),500"."\");</script>";//
+
+	}
 }
 
-function jconnekt_logout(){
-	JCFactory::getJConnect()->deleteLocalToken();
-	JCFactory::getJConnect()->logout();
+function jconnekt_logout(){ 
+	if(JCFactory::isJConnektSession()){
+		JCFactory::getJConnect()->deleteLocalToken();
+		JCFactory::getJConnect()->logout();
+	}
 }
 
 
