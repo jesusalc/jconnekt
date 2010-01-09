@@ -55,6 +55,10 @@ class JConnect{
 	}
 	
 	public function logout(){
+		//indicators to remove JConnekt session
+		//indicate jconnekt session is closed
+		setcookie("JCONNEKT_SESSION",true,time()-3600,"/");
+		
 		$jconnekt_api_url=JCFactory::$api_url;
 		if(!substr($jconnekt_api_url,strlen($jconnekt_api_url)-1,1)=="/") $jconnekt_api_url.="/";
 		

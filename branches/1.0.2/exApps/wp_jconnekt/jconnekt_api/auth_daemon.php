@@ -43,6 +43,10 @@ else{
 		$res=json_decode($res[0],true);
 		$res=$res['data'];
 		
+		//indicate that JConnekt session is started
+		//indicate jconnekt session is started
+		setcookie("JCONNEKT_SESSION",true,null,"/");
+		
 		JCFactory::$auth->login(true,$res);
 	}else {
 		

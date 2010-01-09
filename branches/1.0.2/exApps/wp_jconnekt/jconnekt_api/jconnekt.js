@@ -59,7 +59,6 @@ function popup_jconnekt(url,width,height){
 }
 
 function check_token(data){
-	document.title=data;
 	if(data){
 		var res;
 		eval('res=' + data);
