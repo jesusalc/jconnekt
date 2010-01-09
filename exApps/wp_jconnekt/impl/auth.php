@@ -30,7 +30,6 @@ class JCWPAuth extends JCAuth{
 		//login here
 		if($user_id){
 			wp_set_auth_cookie($user_id);
-			$_SESSION['JCONNEKT_LOGIN']=true;
 		}
 		
 		//the application url
@@ -45,7 +44,7 @@ class JCWPAuth extends JCAuth{
 
 	public function logout(){
 		require_once(ABSPATH . WPINC . '/pluggable.php');
-		wp_logout();
+		wp_clear_auth_cookie();
 		
 		//the application url
 		$url=JCFactory::$app_url;

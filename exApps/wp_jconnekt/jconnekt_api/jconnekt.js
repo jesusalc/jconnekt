@@ -39,7 +39,7 @@ function JConnekt(app_name,api_url,joomla_url,caller_url){
 		var div=document.getElementById(div_name);
 		var src_url=joomla_url + '?option=com_jconnect&controller=auth&task=request_token&app_name='+app_name+
 			'&return_to='+return_to+'&goto=' + page_to_load;
-		div.innerHTML="<iframe width=800 height=100 src='"+src_url+"'></iframe>";
+		div.innerHTML="<iframe width=0 height=0 src='"+src_url+"'></iframe>";
 	};
 	
 	this.ajax_validator=function(div_name,url){
@@ -59,6 +59,7 @@ function popup_jconnekt(url,width,height){
 }
 
 function check_token(data){
+	document.title=data;
 	if(data){
 		var res;
 		eval('res=' + data);
