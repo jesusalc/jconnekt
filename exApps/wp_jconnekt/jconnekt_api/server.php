@@ -91,7 +91,7 @@ function getUserCount($data){
 	try{
 		if(!JCFactory::$userSync) throw new Exception("Not Implemented",1024);
 		$res=JCFactory::$userSync->getUserCount();
-		Endpoint::returnResult((int)$res->cnt);
+		Endpoint::returnResult((int)$res);
 	}catch(Exception $ex){
 		$errNo=($ex->getCode())?$ex->getCode():127;
 		Endpoint::returnException($errNo,$ex->getMessage());

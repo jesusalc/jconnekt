@@ -113,6 +113,7 @@ class JconnectControllerAuth extends JController{
 			if(!ExternalUser::contains($user->id)){
 				$userGroup=new JCGroupOut($res->appID,$user->usertype);
 			}
+			
 			$data=array(
 				'username'=>$user->username,
 				'email'=>$user->email,
