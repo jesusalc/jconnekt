@@ -40,6 +40,7 @@ else{
 		$joomla_url=JCFactory::getJConnect()->joomla_path;
 		$access_token=hash_hmac("md5",$response['request_token'],JCFactory::getAuthKey());
 		$res=file($joomla_url . '?option=com_jconnect&action=query&json={"access_token":"'.$access_token.'"}');
+		
 		$res=json_decode($res[0],true);
 		$res=$res['data'];
 		

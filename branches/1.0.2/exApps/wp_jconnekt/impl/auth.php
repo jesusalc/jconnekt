@@ -27,6 +27,12 @@ class JCWPAuth extends JCAuth{
 			$user_id = wp_create_user( $user_name, $random_password, $user_email );
 		} 
 		
+		//check for user groups
+		if(isset($data['user_group']) && $user->roles[1]!=$data['user_group']){
+			$user=new WP_User($user_id);
+			$user->set_role($data['user_group']);
+		}
+		
 		//login here
 		if($user_id){
 			wp_set_auth_cookie($user_id);

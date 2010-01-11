@@ -283,17 +283,18 @@ class Methods{
 	/**
 		Query User information if logged in..
 	 */
-	static function query($data){
-		$access_token=$data['access_token'];
+	static function query($info){
+		$access_token=$info['access_token'];
 		$rtn=array();
 		if(Methods::validate_token($access_token)){
 			$model=JModel::getInstance("token","JConnectModel");
 			$data=$model->get($access_token);
 			$user=JUser::getInstance((int)$data->user_id);
 			$userGroup=null;
+			
 			//we are only sending userGroup for users not owned by current ExApp
 			if(!ExternalUser::contains($user->id)){
-				$userGroup=new JCGroupOut($res->appID,$user->usertype);
+				$userGroup=new JCGroupOut($data->app_id,$user->usertype);
 			}
 			$rtn=array(
 				'username'=>$user->username,

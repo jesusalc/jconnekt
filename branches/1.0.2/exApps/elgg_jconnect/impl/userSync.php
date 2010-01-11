@@ -29,7 +29,7 @@ class JCElggUserSync extends JCUserSync{
 		global $CONFIG;
 		$sql="SELECT COUNT(*) as cnt FROM ".$CONFIG->dbprefix."users_entity";
 		$res=get_data_row($sql);
-		return $res;
+		return $res->cnt;
 	}
 
 	public function getUserGroups(){
