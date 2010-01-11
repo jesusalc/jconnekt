@@ -21,10 +21,58 @@ class JCElggUserSync extends JCUserSync{
 	}
 
 	public function getUserDetails($chunkSize,$chunkNo){
+		global $wpdb;
+		$myrows = $wpdb->get_results( 
+			"SELECT user_login FROM $wpdb->users ORDER BY user_login ASC LIMIT ".(($chunkNo-1)*$chunkSize).",".$chunkSize."");
 		
+		$users=array();
+		foreach($myrows as $user){
+			$val=new WP_User($user->user_login);
+		
+			$userGroup=null;
+			if($val->roles[0]){
+				$userGroup=$val->roles[0];
+			}
+			else if($val->roles[1]){
+				$userGroup=$val->roles[1];
+			}
+			else{
+				$userGroup='subscriber';
+			}
+			
+			$arr=array($val->user_login,$val->user_email,$userGroup);
+			array_push($users,$arr);
+		}
+		
+		return $users;
 	}
 	
 	public function getUsers($usernameList){
+		global $wpdb;
+		$userList=array();
+		$myrows = $wpdb->get_results("SELECT user_login FROM $wpdb->users WHERE user_login " .
+			"IN ('".implode("','",$usernameList)."')");
 		
+			
+		$users=array();
+		foreach($myrows as $user){
+			$val=new WP_User($user->user_login);
+		
+			$userGroup=null;
+			if($val->roles[0]){
+				$userGroup=$val->roles[0];
+			}
+			else if($val->roles[1]){
+				$userGroup=$val->roles[1];
+			}
+			else{
+				$userGroup='subscriber';
+			}
+			
+			$arr=array($val->user_login,$val->user_email,$userGroup);
+			array_push($users,$arr);
+		}
+		
+		return $users;
 	}
 }
