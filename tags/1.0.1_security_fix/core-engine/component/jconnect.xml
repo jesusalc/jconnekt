@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="component" version="1.5.0">
+	<name>JConnect</name>
+	<!--
+		The following elements are optional and free of formatting conttraints
+	-->
+	<creationDate>July 2009</creationDate>
+	<author>Arunoda Susiripala</author>
+	<authorEmail>arunoda@mit2007.com</authorEmail>
+	<authorUrl>http://jconnect.googlecode.com</authorUrl>
+
+	<!--  The version string is recorded in the components table -->
+	<version>1.1.3</version>
+
+
+	<installfile>install.php</installfile>
+	<uninstallfile>uninstall.php</uninstallfile>
+
+	<files folder="site">
+		<filename>controllers/auth.php</filename>
+		<filename>controllers/index.html</filename>
+		<filename>models/auth.php</filename>
+		<filename>views/auth/tmpl/default.php</filename>
+		<filename>views/auth/tmpl/index.html</filename>
+		<filename>views/auth/view.raw.php</filename>
+		<filename>views/auth/index.html</filename>
+		<filename>helpers/initServer.php</filename>
+		<filename>helpers/aes-lib.php</filename>
+		<filename>index.html</filename>
+		<filename>assests/style.css</filename>
+		<filename>assests/jcaccount.png</filename>
+		<filename>assests/jclogin.gif</filename>
+		<filename>controller.php</filename>
+		<filename>jconnect.php</filename>
+
+	</files>
+	
+	<languages folder="site/languages">
+			<language tag="en-GB">en-GB/en-GB.com_jconnect.ini</language>
+	</languages>
+
+	<install>
+		<sql>
+			<file charset="utf8" driver="mysql">install.sql.php</file>
+		</sql>
+	</install>
+	<uninstall>
+		<sql>
+			<file charset="utf8" driver="mysql">uninstall.sql.php</file>
+		</sql>
+	</uninstall>
+
+	<administration>
+		<!-- Administration Menu Section -->
+		<menu link="option=com_jconnect">JConnect</menu>
+		<submenu>
+			<menu link="option=com_jconnect&amp;controller=exApps">External Applications</menu>
+			<menu link="option=com_jconnect&amp;controller=syncUsers">Sync User Management</menu>
+			<menu link="option=com_jconnect&amp;controller=bulkSync">Bulk Synchronization</menu>
+		</submenu>
+
+		<!-- Administration Main File Copy Section -->
+		<files folder="admin">
+			<filename>controllers/syncUsers.php</filename>
+			<filename>controllers/exApps.php</filename>
+			<filename>controllers/index.html</filename>
+			<filename>controllers/bulkSync.php</filename>
+			<filename>models/bulksync.php</filename>
+			<filename>models/exapps_list.php</filename>
+			<filename>models/index.html</filename>
+			<filename>models/syncusers.php</filename>
+			<filename>models/exapps_form.php</filename>
+
+			<filename>views/jconnect/tmpl/default.php</filename>
+			<filename>views/jconnect/tmpl/index.html</filename>
+			<filename>views/jconnect/view.html.php</filename>
+			<filename>views/jconnect/index.html</filename>
+			<filename>views/bulksync_results/tmpl/default.php</filename>
+			<filename>views/bulksync_results/tmpl/index.html</filename>
+			<filename>views/bulksync_results/view.html.php</filename>
+			<filename>views/bulksync_results/index.html</filename>
+			<filename>views/bulksync_list/tmpl/default.php</filename>
+
+			<filename>views/bulksync_list/tmpl/index.html</filename>
+			<filename>views/bulksync_list/view.html.php</filename>
+			<filename>views/bulksync_list/index.html</filename>
+			<filename>views/exapps_form/tmpl/default.php</filename>
+			<filename>views/exapps_form/tmpl/index.html</filename>
+			<filename>views/exapps_form/view.html.php</filename>
+			<filename>views/exapps_form/index.html</filename>
+			<filename>views/index.html</filename>
+			<filename>views/exapps_list/tmpl/default.php</filename>
+
+			<filename>views/exapps_list/tmpl/index.html</filename>
+			<filename>views/exapps_list/view.html.php</filename>
+			<filename>views/exapps_list/index.html</filename>
+			<filename>views/syncusers/tmpl/default.php</filename>
+			<filename>views/syncusers/tmpl/index.html</filename>
+			<filename>views/syncusers/view.html.php</filename>
+			<filename>views/syncusers/index.html</filename>
+			<filename>tables/index.html</filename>
+			<filename>tables/exapps.php</filename>
+
+			<filename>images/bulkSync.png</filename>
+			<filename>images/exApps.png</filename>
+			<filename>images/syncUser.png</filename>
+
+			<filename>index.html</filename>
+			<filename>controller.php</filename>
+			<filename>jconnect.php</filename>
+			<filename>install.sql.php</filename>
+			<filename>uninstall.sql.php</filename>
+			<filename>ext/system.zip</filename>
+			<filename>ext/user.zip</filename>
+			<filename>ext/activity.zip</filename>
+		</files>
+
+		<languages folder="admin/languages">
+			<language tag="en-GB">en-GB/en-GB.com_jconnect.ini</language>
+		</languages>
+
+
+	</administration>
+</install>
