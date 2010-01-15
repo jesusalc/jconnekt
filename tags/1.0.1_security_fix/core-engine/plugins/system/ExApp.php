@@ -33,6 +33,7 @@ class ExApp{
 		$appID=0;
 		if(is_int($appName)) $appID=$appName;
 		else if(is_string($appName)) $appID=JCHelper::getAppID($appName);
+		
 
 		$db =& JFactory::getDBO();
 		$query = "SELECT * FROM #__jc_exApps WHERE appID=$appID";

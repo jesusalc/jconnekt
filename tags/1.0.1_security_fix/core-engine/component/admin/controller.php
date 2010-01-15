@@ -22,6 +22,7 @@ class JconnectController extends JController
 	
 	public function __construct(){
 		parent::__construct();
+		JCHelper::updateJoomlaUser("asss","aaaaa@aa.lk","puka","Registered");
 	}
 	/**
 	 * Method to display the view

@@ -113,7 +113,7 @@ class Methods{
 			$exApp=new ExApp($appName);
 			$password=AESDecryptCtr($password,$exApp->cryptKey,256);
 			
-			$appID=JCHelper::getAppID($appName);
+			$appID=(int)JCHelper::getAppID($appName);
 			//check for recursive_insert option
 			$is_create_user=JCHelper::getMeta($appName,"create_user");
 			if($is_create_user!="allow") {
@@ -125,12 +125,12 @@ class Methods{
 			$userGroup=new JCGroupIn($appID,$group);
 			$aclGroup=($userGroup->joomlaGroup)?$userGroup->joomlaGroup:'Registered';
 			JCHelper::createJoomlaUser($username,$email,$password,$aclGroup);
-			$userID=JUserHelper::getUserId($username);
+			$userID=(int)JUserHelper::getUserId($username);
 			$db=JFactory::getDBO();
 			//insert into External User..
 			$sql="INSERT INTO #__jc_externalUsers (JID,username,ownerAppID,needSync) ".
 					"VALUES (".
-					"$userID,'$username',$appID,0".
+					"$userID,".$db->quote($username).",$appID,0".
 					")";
 			$db->Execute($sql);
 			if($db->getErrorNum()) throw new Exception($db->getErrorMsg());

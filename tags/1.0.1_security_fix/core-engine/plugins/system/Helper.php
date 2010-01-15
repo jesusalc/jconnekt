@@ -20,6 +20,7 @@ class JCHelper{
 	public static function isExAppEnabled($appID,$place=null){
 		if(is_string($appID)) $appID=JCHelper::getAppID($appID);
 		else if(!isset($appID)) $appID=0;
+		$appID=(int)$appID;
 		$db=JFactory::getDBO();
 		$sql="SELECT published FROM #__jc_exApps WHERE appID=$appID";
 		$db->setQuery($sql);
@@ -75,16 +76,22 @@ class JCHelper{
 		else if(!isset($appID)) $appID=0;
 		$db=JFactory::getDBO();
 		$meta=JCHelper::getMeta($appID,$metaKey);
+		
+		
+		$appID=(int)$appID;
 
+		$metaKey=$db->quote($metaKey);
+		$value=$db->quote($value);
+		
 		if(isset($meta)){
 			//update
-			$sql="UPDATE #__jc_meta SET value='$value' WHERE appID=$appID AND metaKey='$metaKey'";
+			$sql="UPDATE #__jc_meta SET value=$value WHERE appID=$appID AND metaKey=$metaKey";
 			$db->Execute($sql);
 		}
 		else{
 			//insert
 			$sql="INSERT INTO #__jc_meta(appID,metaKey,value) VALUES ".
-				"($appID,'$metaKey','$value')";
+				"($appID,$metaKey,$value)";
 			$db->Execute($sql);
 		}
 
@@ -94,9 +101,12 @@ class JCHelper{
 	}
 
 	public static function getAppID($appName){
+		
 		$db =& JFactory::getDBO();
+		
+		$appName=$db->quote($appName);
 		$sql="SELECT appID FROM #__jc_exApps WHERE " .
-			"appName='$appName'";
+			"appName=$appName";
 		$db->setQuery($sql);
 		$res=$db->loadObject();
 		if($db->getErrorNum()){
@@ -213,8 +223,9 @@ class JCHelper{
 
 	public static function getAppName($appID){
 		$db =& JFactory::getDBO();
+		
 		$sql="SELECT appName FROM #__jc_exApps WHERE " .
-			"appID=$appID";
+			"appID=".(int)$appID;
 		$db->setQuery($sql);
 		$res=$db->loadObject();
 		if($db->getErrorNum()){
@@ -298,7 +309,12 @@ class JCHelper{
 		//earlier we did this using JUser Object but didn't work well....
 		//add the users...
 		$sql="INSERT INTO #__users(name,username,email,password,gid,usertype,sendEmail) ".
-					"VALUES ('$username','$username','$email','$password',$gid,'$groupname',1)";
+					"VALUES ("
+						.$db->quote($username).","
+						.$db->quote($username).",".
+						$db->quote($email).",".
+						$db->quote($password).",$gid,".
+						$db->quote($groupname).",1)";
 		//$userId=JUserHelper::getUserId()
 		$db->Execute($sql);
 		//2345 indicates a fatal error
@@ -309,11 +325,11 @@ class JCHelper{
 
 		//add to acl
 		$sql="INSERT INTO #__core_acl_aro(section_value,value,name) ".
-					"VALUES ('users','$userID','$username')";
+					"VALUES ('users',$userID,".$db->quote($username).")";
 		$db->Execute($sql);
 		if($db->getErrorMsg()) throw new Exception($db->getErrorMsg(),2345);
 
-		$sql="SELECT id FROM #__core_acl_aro WHERE value='$userID'";
+		$sql="SELECT id FROM #__core_acl_aro WHERE value=$userID";
 		$db->setQuery($sql);
 		$res=$db->loadObject();
 		if($db->getErrorMsg()) throw new Exception($db->getErrorMsg(),2345);
@@ -341,10 +357,10 @@ class JCHelper{
 		$crypt = JUserHelper::getCryptedPassword($password, $salt);
 		$joomlaPassword= $crypt.':'.$salt;
 
-		$sql="UPDATE #__users SET username='$username' ";
-		if($email) $sql.=", email='$email' ";
-		if($password) $sql.=", password='$joomlaPassword' ";
-		if($groupname) $sql.=", gid=$gid, usertype='$groupname' ";
+		$sql="UPDATE #__users SET username=".$db->quote($username);
+		if($email) $sql.=", email=".$db->quote($email);
+		if($password) $sql.=", password=".$db->quote($joomlaPassword);
+		if($groupname) $sql.=", gid=$gid, usertype=".$db->quote($groupname);
 		$sql.="WHERE id=$userID";
 
 		$db->Execute($sql);
@@ -352,7 +368,7 @@ class JCHelper{
 
 		if($groupname){
 			//update acl group mappings...
-			$sql="SELECT id FROM #__core_acl_aro WHERE value='$userID'";
+			$sql="SELECT id FROM #__core_acl_aro WHERE value=".(int)$userID;
 			$db->setQuery($sql);
 			$res=$db->loadObject();
 				
