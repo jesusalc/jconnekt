@@ -17,7 +17,7 @@ class JconnectModelExapps_form extends JModel{
 		$appIDs=JRequest::getVar("cid",array(),'','array');
 		if(isset($appIDs[0])){
 			//for edit...
-			$sql="SELECT * FROM #__jc_exApps where appID='$appIDs[0]'";
+			$sql="SELECT * FROM #__jc_exApps where appID=".(int)$appIDs[0];
 			$db=JFactory::getDBO();
 			$db->setQuery($sql);
 			return $db->loadObject();
@@ -176,16 +176,21 @@ class JconnectModelExapps_form extends JModel{
 	}
 	
 	protected function setMeta($appID,$metaKey,$value){
+		//sanitation
+		$appID=(int)$appID;
+		$metaKey=$this->_db->quote($metaKey);
+		$value=$this->_db->quote($value);
+		
 		$meta=$this->getMeta($appID,$metaKey);
 		if($meta){
 			//update	
-			$sql="UPDATE #__jc_meta SET value='$value' WHERE appID=$appID AND metaKey='$metaKey'";
+			$sql="UPDATE #__jc_meta SET value=$value WHERE appID=$appID AND metaKey=$metaKey";
 			$this->_db->Execute($sql);
 		}
 		else{
 			//insert
 			$sql="INSERT INTO #__jc_meta(appID,metaKey,value) VALUES ".
-				"($appID,'$metaKey','$value')";
+				"($appID,$metaKey,$value)";
 			$this->_db->Execute($sql);
 		}
 		

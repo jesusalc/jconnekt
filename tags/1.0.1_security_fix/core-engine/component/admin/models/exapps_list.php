@@ -27,7 +27,7 @@ class JconnectModelExapps_list extends JModel{
 		$idList="";
 		//making a list of id's seperated by comma.
 		foreach($appID as $id=>$val){
-			$idList.=$val.",";
+			$idList.=(int)$val.",";
 		}
 		//remove the last comma
 		if($idList) $idList=substr($idList,0,strlen($idList)-1);
