@@ -28,6 +28,7 @@
 <?php 
 $session=JFactory::getSession();
 $conflictSize=sizeof($session->get("conflicts",array()));
+
 if($conflictSize<=0){
 		echo JText::_('NO_USERNAME_CONFLICTS');
 }

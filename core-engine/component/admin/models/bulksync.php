@@ -19,9 +19,10 @@ class JconnectModelBulksync extends JModel {
 	}
 
 	function getSyncUserCount($appName){
+		$appName=$this->_db->quote($appName);
 		
 		$sql="SELECT COUNT(*) as cnt FROM #__jc_syncUsers su INNER JOIN #__jc_exApps e ".
-			"ON e.appID=su.appID WHERE appName='$appName'";
+			"ON e.appID=su.appID WHERE appName=$appName";
 		$this->_db->setQuery($sql);
 		if($this->_db->getErrorNum()){
 			throw new Exception($this->_db->getErrorNum() ." :: ". $this->_db->getErrorMsg());
@@ -170,7 +171,8 @@ class JconnectModelBulksync extends JModel {
 		$toJCount=0;
 		$toExCount=0;
 		$DIVIDER=500;
-		$appID=JCHelper::getAppID($appName);
+		$appID=(int)JCHelper::getAppID($appName);
+		
 		
 		for($lc=1;true;$lc++){
 			$users=$exApp->getUserDetails($DIVIDER,$lc);
@@ -183,15 +185,18 @@ class JconnectModelBulksync extends JModel {
 			
 			$nonSyncUsers=JCHelper::array_diff_2d_1d($users,$syncedUsers);
 			
+			
+			
 			//get conflict users
 			$sql="SELECT username FROM #__users WHERE username IN ('"
-			.(JCHelper::implodeArray2D("','",$nonSyncUsers,0))."')";
+			.JCHelper::implodeArray2D("','",$nonSyncUsers,0)."')";
 			$this->_db->setQuery($sql);
 			if($this->_db->getErrorNum()) throw new Exception($this->_db->getErrorMsg());
 			$conflictsTmp=$this->_db->loadResultArray();
 			
 			//new users..
 			$newUsers=JCHelper::array_diff_2d_1d($nonSyncUsers,$conflictsTmp);
+			
 			$exceptionsTmp=$this->syncToJoomla($appID,$newUsers);
 			$toJCount=sizeof($newUsers) - sizeof($exceptionsTmp);
 			$exceptions=array_merge($exceptions,$exceptionsTmp);
@@ -202,6 +207,7 @@ class JconnectModelBulksync extends JModel {
 		
 		//Conflicts will be set-into the Session Variable
 		$session=JFactory::getSession();
+		
 		$session->set("conflicts",$conflicts);
 		$result=array("appName"=>$appName,"toJCount"=>$toJCount,
 			"exceptions"=>$exceptions);
@@ -209,7 +215,6 @@ class JconnectModelBulksync extends JModel {
 		return $result;
 	}
 
-	
 
 	
 }

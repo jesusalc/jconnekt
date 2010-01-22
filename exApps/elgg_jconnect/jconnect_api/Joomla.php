@@ -52,12 +52,6 @@ class Joomla{
 			'username'=>$username));  
 	}
 	
-	public function check_token($access_token){
-		return $this->callMethod("check_token",array(
-			'access_token'=>$access_token
-		));
-	}
-	
 	
 	private function callMethod($action,$paramArray){
 		//generating hash value and send-it...

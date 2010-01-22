@@ -23,25 +23,25 @@ class JCElggAuth extends JCAuth{
 					$user->email=$data['email'];
 				}
 
-				//to tell system that user logged via JConnekt
-				$_SESSION['JCONNEKT_LOGIN']=true;
+				//to prevent call's joomla's updateUser in the login-hook..
+				$_SESSION['JC_LOGIN']=true;
 				$res=login($user,false);
-				
+				unset($_SESSION['JC_LOGIN']);
 				if($data['user_group']){
 					$type=($data['user_group']=='admin')?'yes':null;
 					$user->admin=$type;
 					$user->save();
 				}
-				
+				//to tell elgg in the next time that I've logged in...
+				setcookie("jc_elgg",$_SESSION['code'],0,"/");
+				setcookie("jc_elgg_j_session",$data['session_id'],0,"/");
+				var_dump($data['session_id']);
+
 				// this will close the popup and
 				// reload the elgg homepage in the parent window...
-				//opener will be used if popup is there
-				//parent will be used for when iframe is used
 				global $CONFIG;
-				$goto=($_GET['goto'])?$_GET['goto']:$CONFIG->url;
 				echo "<script type='text/javascript'>".
-			"if(opener)opener.location.href='$CONFIG->url';".
-			"else if(parent)parent.window.location.href='".$goto."'".
+			"opener.location.href='$CONFIG->url';".
 			"</script>";
 			}
 		}
@@ -74,9 +74,7 @@ class JCElggAuth extends JCAuth{
 		session_destroy();
 		setcookie("jc_elgg_j_session", "", (time()-(86400 * 30)),"/");
 
-		echo "<script type='text/javascript'>".
-			"if(parent)parent.window.location.href='".$CONFIG->url."'".
-			"</script>";
+		header("Location: $CONFIG->url");
 		return true;
 	}
 }

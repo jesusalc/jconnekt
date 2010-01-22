@@ -17,6 +17,7 @@ class JconnectViewExapps_form extends JView{
 		JToolBarHelper::apply("applyForm");
 
 		$exApp=$this->get("exApp");
+		$meta=$this->getModel()->getAllMeta($exApp->appID);
 
 		if($exApp->appName){
 			//edit... //when exApp is already exists...
@@ -32,15 +33,9 @@ class JconnectViewExapps_form extends JView{
 				$this->assignRef('exAppGroups',$exAppGroups);
 				$joomlaGroups=$this->getModel()->getJoomlaGroups();
 				$this->assignRef('joomlaGroups',$joomlaGroups);
-				
-				$meta=$this->getModel()->getAllMeta($exApp->appID);
-				$this->assignRef("meta",$meta);
-				
 			}
 			catch(Exception $ex){
 				JError::raiseWarning(0,'User Groups Cannot be loaded!');
-				$isError=true;
-				$this->assignRef('isError',$isError);
 			}
 		}
 		else{
@@ -51,6 +46,7 @@ class JconnectViewExapps_form extends JView{
 
 
 		$this->assignRef("exApp",$exApp);
+		$this->assignRef("meta",$meta);
 		parent::display();
 	}
 }

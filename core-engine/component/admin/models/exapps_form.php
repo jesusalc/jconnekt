@@ -17,7 +17,7 @@ class JconnectModelExapps_form extends JModel{
 		$appIDs=JRequest::getVar("cid",array(),'','array');
 		if(isset($appIDs[0])){
 			//for edit...
-			$sql="SELECT * FROM #__jc_exApps where appID='$appIDs[0]'";
+			$sql="SELECT * FROM #__jc_exApps where appID=".(int)$appIDs[0];
 			$db=JFactory::getDBO();
 			$db->setQuery($sql);
 			return $db->loadObject();
@@ -45,9 +45,9 @@ class JconnectModelExapps_form extends JModel{
 		$meta->allow_incoming=JCHelper::getMeta($appID,"allow_incoming");
 		$meta->allow_outgoing=JCHelper::getMeta($appID,"allow_outgoing");
 		
-		if(isset($meta->recursive_insert)) $meta->recursive_insert="allow"; //deny
-		if(isset($meta->recursive_delete)) $meta->recursive_delete="deny"; //allow
-		if(isset($meta->username_conflict)) $meta->username_conflict="update"; //ignore
+		if(!$meta->recursive_insert) $meta->recursive_insert="allow"; //deny
+		if(!$meta->recursive_delete) $meta->recursive_delete="deny"; //allow
+		if(!$meta->username_conflict) $meta->username_conflict="update"; //ignore
 		
 		return $meta;
 	}
@@ -176,16 +176,21 @@ class JconnectModelExapps_form extends JModel{
 	}
 	
 	protected function setMeta($appID,$metaKey,$value){
+		//sanitation
+		$appID=(int)$appID;
+		$metaKey=$this->_db->quote($metaKey);
+		$value=$this->_db->quote($value);
+		
 		$meta=$this->getMeta($appID,$metaKey);
 		if($meta){
 			//update	
-			$sql="UPDATE #__jc_meta SET value='$value' WHERE appID=$appID AND metaKey='$metaKey'";
+			$sql="UPDATE #__jc_meta SET value=$value WHERE appID=$appID AND metaKey=$metaKey";
 			$this->_db->Execute($sql);
 		}
 		else{
 			//insert
 			$sql="INSERT INTO #__jc_meta(appID,metaKey,value) VALUES ".
-				"($appID,'$metaKey','$value')";
+				"($appID,$metaKey,$value)";
 			$this->_db->Execute($sql);
 		}
 		

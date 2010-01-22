@@ -45,11 +45,9 @@ class JConnect{
 			$this->nonceManager->save();
 			$return_to.="$nonce";
 		}
-		
-		$return_to="http://localhost/jconnekt/elgg/mod/elgg_jconnect/jconnect_api/auth_daemon.php?goto={$_SERVER['REQUEST_URI']}";
 		$redirect_to=$this->joomla_path.
-			"/?option=com_jconnect&controller=auth&format=raw&app_name={$this->appName}".
-			"&return_to=$return_to";
+			"/?option=com_jconnect&controller=auth&format=raw&appName={$this->appName}".
+			"&callback=$return_to";
 		header("Location: $redirect_to");
 		exit(0);
 	}
@@ -143,4 +141,24 @@ class JConnect{
 		return (substr($path,0,1)=="/")?$path:"/$path";
 	}
 
+	/**
+	 *  This supports suto active single sign-out...
+		@param $redirect_to - if needed to logout the url to call
+	 */
+	public function autoActiveSSO($session_id,$elgg_user,$redirect_to){
+		if(!$session_id || !$elgg_user || !$redirect_to) return;
+		$url=$this->joomla_path."/index.php?option=com_jconnect&controller=auth".
+			"&format=raw&task=getUserBySession&session_id=$session_id";
+		$res=file($url);
+		$joomla_user=null;
+		if(isset($res[0])){
+			$joomla_user=$res[0];
+		}
+
+		if($joomla_user==null || $joomla_user!=$elgg_user){
+			echo "<script type='text/javascript'>".
+				"location.href='$redirect_to';".
+				"</script>";
+		}
+	}
 }

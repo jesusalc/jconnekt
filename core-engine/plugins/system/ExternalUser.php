@@ -21,23 +21,22 @@ class ExternalUser{
 
 	public function __construct($JID=null){
 		$this->db=JFactory::getDBO();
-		$this->JID=$JID;
 		if($JID==null ) return;
+		$JID=(int)$JID;
 		$sql="SELECT * FROM #__jc_externalUsers WHERE JID=$JID";
 		$this->db->setQuery($sql);
 		$res=$this->db->loadObject();
 		if($this->db->getErrorNum()) throw new Exception($this->db->getErrorMsg());
-		
-		if(isset($res)){
-			$this->ownerAppID=$res->ownerAppID;
-			$this->username=$res->username;
-			$this->needSync=$res->needSync;
-		}
+
+		$this->ownerAppID=(int)$res->ownerAppID;
+		$this->JID=$JID;
+		$this->username=$res->username;
+		$this->needSync=(int)$res->needSync;
 	}
 
 	public function save(){
 		$sql="INSERT INTO #__jc_externalUsers (JID,ownerAppID,username,needSync) VALUES (".
-		"$this->JID,$this->ownerAppID,'$this->username',$this->needSync) ON DUPLICATE KEY UPDATE ".
+		"$this->JID,$this->ownerAppID,".$this->db->quote($this->username).",$this->needSync) ON DUPLICATE KEY UPDATE ".
 		"username=VALUES(username),ownerAppID=VALUES(ownerAppID),needSync=VALUES(needSync)";
 		$this->db->Execute($sql);
 		if($this->db->getErrorNum()) throw new Exception($this->db->getErrorMsg());
@@ -51,6 +50,7 @@ class ExternalUser{
 	}
 
 	public static function  contains($userID){
+		$userID=(int)$userID;
 		$db = JFactory::getDBO();
 		$query = "SELECT eu.* FROM #__jc_externalUsers eu WHERE eu.JID=$userID";
 

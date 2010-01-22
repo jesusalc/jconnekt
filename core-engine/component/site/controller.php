@@ -12,7 +12,6 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 require_once( JPATH_COMPONENT.DS.'helpers'.DS.'initServer.php' );
 
-
 jimport('joomla.application.component.controller');
 
 
@@ -38,15 +37,13 @@ class JconnectController extends JController
 	function display()
 	{
 		Endpoint::run();
-	}
-
-	
+	}	
 }
 
 class Endpoint{
 	//runs the endpoint
 	static function run(){
-		$registeredActions=array('createUser','updateUser','deleteUser','check_token','query');
+		$registeredActions=array('createUser','updateUser','deleteUser');
 		$action=JRequest::getCmd('action');
 		if(in_array($action,$registeredActions)){
 			$data=json_decode(JRequest::getString('json'),true);
@@ -116,7 +113,7 @@ class Methods{
 			$exApp=new ExApp($appName);
 			$password=AESDecryptCtr($password,$exApp->cryptKey,256);
 			
-			$appID=JCHelper::getAppID($appName);
+			$appID=(int)JCHelper::getAppID($appName);
 			//check for recursive_insert option
 			$is_create_user=JCHelper::getMeta($appName,"create_user");
 			if($is_create_user!="allow") {
@@ -128,12 +125,12 @@ class Methods{
 			$userGroup=new JCGroupIn($appID,$group);
 			$aclGroup=($userGroup->joomlaGroup)?$userGroup->joomlaGroup:'Registered';
 			JCHelper::createJoomlaUser($username,$email,$password,$aclGroup);
-			$userID=JUserHelper::getUserId($username);
+			$userID=(int)JUserHelper::getUserId($username);
 			$db=JFactory::getDBO();
 			//insert into External User..
 			$sql="INSERT INTO #__jc_externalUsers (JID,username,ownerAppID,needSync) ".
 					"VALUES (".
-					"$userID,'$username',$appID,0".
+					"$userID,".$db->quote($username).",$appID,0".
 					")";
 			$db->Execute($sql);
 			if($db->getErrorNum()) throw new Exception($db->getErrorMsg());
@@ -270,57 +267,6 @@ class Methods{
 	}
 	
 	/**
-		check the access token created using request token for the validity
-		if the token available nothing has been changed in the user - level
-		otherwise something has happened
-	 */
-	static function check_token($data){
-		$access_token=$data['access_token'];
-		$rtn=array('valid'=>Methods::validate_token($access_token));
-		Endpoint::returnResult($rtn);
-	}
-	
-	/**
-		Query User information if logged in..
-	 */
-	static function query($data){
-		$access_token=$data['access_token'];
-		$rtn=array();
-		if(Methods::validate_token($access_token)){
-			$model=JModel::getInstance("token","JConnectModel");
-			$data=$model->get($access_token);
-			$user=JUser::getInstance((int)$data->user_id);
-			$userGroup=null;
-			//we are only sending userGroup for users not owned by current ExApp
-			if(!ExternalUser::contains($user->id)){
-				$userGroup=new JCGroupOut($res->appID,$user->usertype);
-			}
-			$rtn=array(
-				'username'=>$user->username,
-				'email'=>$user->email,
-				'user_group'=>$userGroup->exAppGroup,
-				'name'=>$user->name
-			);
-		}
-		
-		Endpoint::returnResult($rtn);
-	}
-	
-	private static function validate_token($access_token){
-		$model=JModel::getInstance("token","JConnectModel");
-		$data=$model->get($access_token);
-		$rtn=false;
-		$token_valid_time=10000000;
-		if(isset($data)){
-			$old_time=(int)$data->timestamp;
-			if((time()-$old_time)<$token_valid_time){
-				$rtn=true;
-			}
-		}
-		
-		return $rtn;
-	}
-	/**
 	 * 
 	 * check the given user is banned or not!
 	 * @param $JID-Joomla user ID
@@ -331,6 +277,5 @@ class Methods{
 		$su=new SyncUser($JID,$appID);
 		return (isset($su) && $su->status=="BAN")?true:false;
 	}
-	
 }
 ?>

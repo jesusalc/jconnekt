@@ -24,7 +24,7 @@ class JconnectModelSyncusers extends JModel{
 
 		//Filter states...
 		$usernameFilter=$mainframe->getUserStateFromRequest("$option.syncusers.usernameFilter",
-			"usernameFilter","","string");
+			"usernameFilter","","string"); 
 		$appNameFilter=$mainframe->getUserStateFromRequest("$option.syncusers.appNameFilter",
 			"appNameFilter","*All*","string");
 		$stateFilter=$mainframe->getUserStateFromRequest("$option.syncusers.stateFilter",
@@ -46,10 +46,10 @@ class JconnectModelSyncusers extends JModel{
 
 		$where="";
 		if($this->getState("usernameFilter")!=""){
-			$where.=" u.username LIKE '%".$this->getState("usernameFilter")."%' AND";
+			$where.=" u.username LIKE '%".$db->getEscaped( $this->getState("usernameFilter"),true)."%' AND";
 		}
 		if($this->getState("appNameFilter")!="*All*"){
-			$where.=" appName LIKE '".$this->getState("appNameFilter")."' AND";
+			$where.=" appName LIKE '%".$db->getEscaped( $this->getState("appNameFilter"),true)."%' AND";
 		}
 		
 		if($this->getState('banFilter')!="*All*"){
@@ -71,7 +71,7 @@ class JconnectModelSyncusers extends JModel{
 		}
 
 		if($this->getState('limit')>0){
-			$limitText="LIMIT ".$this->getState('limitstart').",".$this->getState('limit');
+			$limitText="LIMIT ".(int)$this->getState('limitstart').",".(int)$this->getState('limit');
 			$sql.=$limitText;
 		}
 		

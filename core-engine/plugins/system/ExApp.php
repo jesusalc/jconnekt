@@ -33,6 +33,7 @@ class ExApp{
 		$appID=0;
 		if(is_int($appName)) $appID=$appName;
 		else if(is_string($appName)) $appID=JCHelper::getAppID($appName);
+		
 
 		$db =& JFactory::getDBO();
 		$query = "SELECT * FROM #__jc_exApps WHERE appID=$appID";
@@ -124,16 +125,12 @@ class ExApp{
 		//$call=$endpoint."?&action=$action&json=".json_encode($paramArray);
 		$res=$this->sendRequest($endpoint,$action,json_encode($paramArray));
 		$res=json_decode($res,true);
-		
-		if(isset($res) && $res['result']==0){
+		if($res->result==0){
 			return $res['data'];
 		}
-		else if((isset($res))){
-			throw new Exception($res['data']['message'],$res['data']['no']);
-		} 
 		else{
-			throw new Exception("Connection Details Invalid!",2);
-		}
+			throw new Exception($res->message,$res->no);
+		} 
 	}
 
 	/**
@@ -158,8 +155,8 @@ class ExApp{
 	        
 		}
 		else{
-			@$res=file("{$endpoint}?&action=$action&json=$json");
-			@$res=stripslashes(implode("\n",$res));
+			$res=file("{$endpoint}?&action=$action&json=$json");
+			$res=stripslashes(implode("\n",$res));
 			
 		}
 		

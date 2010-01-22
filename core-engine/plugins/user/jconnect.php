@@ -11,7 +11,6 @@ defined('_JEXEC') or die( 'Restricted access' );
 
 jimport('joomla.plugin.plugin');
 
-
 /**
  * The User Plugin which overrids user-actions in the joomla to the ExApps
  *
@@ -86,28 +85,7 @@ class plgUserJconnect extends JPlugin {
 		}
 	}
 	
-	private function drop_jconnekt_token(){
-		@include_once(JPATH_BASE.DS.'components/com_jconnect/models'.DS.'token.php');
-		
-		//added to overcome executing this when admin logout /login proceeds..
-		if(!class_exists('JModel')) return; 
-		$jconnekt_token=$_COOKIE['jconnekt_token'];
-		if(isset($jconnekt_token)){
-			$model=JModel::getInstance("token","JConnectModel");
-			
-			//delete all token set by all exApps
-			$model->delete_by_request_token($jconnekt_token);
-			setcookie('jconnekt_token',0,time()-3600,"/");
-		}
-	}
 	
-	function onLoginUser($user, $options){
-		$this->drop_jconnekt_token();	
-	}
-	
-	function onLogoutUser($user){
-		$this->drop_jconnekt_token();	
-	}
 }
 
 
