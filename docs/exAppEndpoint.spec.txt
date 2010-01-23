@@ -1,0 +1,123 @@
+This is a Document which says how ExApp EndPoint does work...
+---------------------------------------------------------------
+The endpoint require an action and data as JSON Object as a Request variables with accepted format..
+
+return will always use like this as a JSON..
+
+{
+	'result':'0|1', //O = OK | 1= Exception
+	'data':ResultObject | Exception
+}
+
+------------------------	
+EndPoint: ExApp
+------------------------	
+
+Action	: deleteUser
+JSON	: 
+	{
+	  
+	  'hmacHash':'',
+	  'salt':'',
+	  'username':'',
+	}
+return :true | Exception
+
+-------------------------
+Action	: getUserCount		[DONE]
+JSON	: 
+	{
+	  
+	  'hmacHash':'',
+	  'salt':'',
+	}
+return :int | Exception
+
+-------------------------
+
+Action	: getUserDetails
+JSON	: 
+	{
+	  
+	  'hmacHash':'',
+	  'salt':'',
+	  'chunkSize':int,
+	  'chunkNo':int,
+	}
+return :Object | Exception
+
+Object: 
+[ 
+	['username','email','group'],
+	['username','email','group'],
+	...,
+]
+-------------------------
+
+Action	: getUsers
+JSON	: 
+	{
+	  
+	  'hmacHash':'',
+	  'salt':'',
+	  'usernameList':['username1','username2',..],
+	}
+return :Object | Exception
+
+Object: 
+[ 
+	['username','email','group'],
+	['username','email','group'],
+	...,
+]
+
+-------------------------
+
+Action	: loadSysInfo
+JSON	: 
+	{
+	  
+	  'hmacHash':'',
+	  'salt':'',
+	  'meta':{'SOME-KEY':'SOME-VAL'}
+	}
+return :true | Exception
+
+-------------------------
+
+Action	: getPublicView
+JSON	: 
+	{
+	  
+	  'hmacHash':'',
+	  'salt':'',
+	}
+return :string | Exception
+
+string: HTML data (url encoded)..
+-------------------------
+
+Action	: getPublicView
+JSON	: 
+	{
+	  
+	  'hmacHash':'',
+	  'salt':'',
+	  'username':''
+	}
+return :string | Exception
+
+string: HTML data string: HTML data (url encoded)..
+-------------------------
+
+Action	: getUserGroups
+JSON	: 
+	{
+	  
+	  'hmacHash':'',
+	  'salt':'',
+	}
+return :Array | Exception
+
+Array: ['groupName','groupName',...,]
+-------------------------

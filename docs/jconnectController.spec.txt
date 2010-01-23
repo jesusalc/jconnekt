@@ -1,0 +1,18 @@
+Component Structure...
+---------------------------------------
+
+Main Controller
+------------------------
+jconnect
+  view-jconnect
+  
+Controllers
+------------------
+exApps
+	view-list
+		-form
+		
+	model-list
+		 -form
+
+user-sync (have to be done..)
