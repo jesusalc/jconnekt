@@ -48,7 +48,7 @@ class plgUserJconnect extends JPlugin {
 				for($lc=0;$lc<sizeof($exAppNames);$lc++){
 						$appID=JCHelper::getAppID($exAppNames[$lc]);
 						$su=new SyncUser($user['id'],$appID);
-						$su->delete();
+						$su->save();
 				}
 				
 				if(ExternalUser::contains($user['id'])){
