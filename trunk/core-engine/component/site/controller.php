@@ -131,16 +131,18 @@ class Methods{
 			$userID=JUserHelper::getUserId($username);
 			$db=JFactory::getDBO();
 			//insert into External User..
-			$sql="INSERT INTO #__jc_externalUsers (JID,username,ownerAppID,needSync) ".
-					"VALUES (".
-					"$userID,'$username',$appID,0".
-					")";
+			$sql='INSERT INTO #__jc_externalUsers (JID,username,ownerAppID,needSync) '.
+					'VALUES ('.
+					(int)$userID.','.
+					$db->quote($username).','.
+					(int)$appID.',0'.
+					')';
 			$db->Execute($sql);
 			if($db->getErrorNum()) throw new Exception($db->getErrorMsg());
 
 			//insert into Sync User
-			$sql="INSERT INTO #__jc_syncUsers (JID,appID,status) VALUES (".
-				"$userID,$appID,'OK')";
+			$sql='INSERT INTO #__jc_syncUsers (JID,appID,status) VALUES ('.
+				(int)$userID.','.(int)$appID.",'OK')";
 			$db->Execute($sql);
 			if($db->getErrorNum()) throw new Exception($db->getErrorMsg());
 		}
@@ -245,7 +247,7 @@ class Methods{
 		//sync_user should be deleted anyway!
 		$db=JFactory::getDBO();
 		//delete user from the JConnect records..
-		$sql="DELETE FROM #__jc_syncUsers WHERE JID={$user->id}";
+		$sql='DELETE FROM #__jc_syncUsers WHERE JID='.(int)$user->id;
 		
 		$db->Execute($sql);
 		if($db->getErrorNum()) Endpoint::returnException(4,$db->getErrorMsg());
@@ -262,7 +264,7 @@ class Methods{
 		}
 		
 		//external user-deleted if the exApp has powers to delete the users..
-		$sql="DELETE FROM #__jc_externalUsers WHERE JID={$user->id}";
+		$sql='DELETE FROM #__jc_externalUsers WHERE JID='.(int)$user->id;
 		$db->Execute($sql);
 		if($db->getErrorNum()) Endpoint::returnException(4,$db->getErrorMsg());
 

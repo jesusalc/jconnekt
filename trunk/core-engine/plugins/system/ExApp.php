@@ -35,7 +35,7 @@ class ExApp{
 		else if(is_string($appName)) $appID=JCHelper::getAppID($appName);
 
 		$db =& JFactory::getDBO();
-		$query = "SELECT * FROM #__jc_exApps WHERE appID=$appID";
+		$query = 'SELECT * FROM #__jc_exApps WHERE appID='.(int)$appID;
 		$db->setQuery($query);
 		$app=$db->loadObject();
 
@@ -186,7 +186,7 @@ class ExApp{
 
 	public static function getExAppList(){
 		$db =& JFactory::getDBO();
-		$query = "SELECT appName FROM #__jc_exApps";
+		$query = 'SELECT appName FROM #__jc_exApps';
 		$db->setQuery($query);
 		return $db->loadResultArray();
 	}

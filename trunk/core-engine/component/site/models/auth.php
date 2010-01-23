@@ -15,13 +15,14 @@ class JconnectModelAuth extends JModel {
 	
 	function getPublicKey($appName,$userID){
 		$exApp=new ExApp($appName);
-		$appID=JCHelper::getAppID($appName);
+		$appID=(int)JCHelper::getAppID($appName);
 		$publicKey=md5(rand());
 		$privateKey=hash_hmac("md5",$publicKey.$appName,$exApp->authKey);
 		$timestamp=time();
 		$session_id=JFactory::getSession()->getId();
-		$sql="INSERT INTO #__jc_auth_key(userID,appID,privateKey,used,timestamp,session_id) VALUES ".
-			"($userID,$appID,'$privateKey',0,$timestamp,'$session_id')";
+		$sql='INSERT INTO #__jc_auth_key(userID,appID,privateKey,used,timestamp,session_id) VALUES '.
+			'('.(int)$userID.',$appID,'.$this->_db->quote($privateKey).
+			',0,$timestamp,'.$this->_db->quote($session_id).')';
 		$this->_db->Execute($sql);
 		if($this->_db->getErrorNum()) 
 		 throw new Exception($this->_db->getErrorMsg());
@@ -37,7 +38,8 @@ class JconnectModelAuth extends JModel {
 	 */
 	function validate($privateKey){
 		$VALIDITY_PERIOD=1000*60*5;
-		$sql="SELECT * FROM #__jc_auth_key WHERE privateKey='$privateKey'";
+		$sql='SELECT * FROM #__jc_auth_key WHERE privateKey='.
+			$this->_db->quote($privateKey);
 		$this->_db->setQuery($sql);
 		$res=$this->_db->loadObject();
 		if($this->_db->getErrorNum()) 
@@ -53,7 +55,8 @@ class JconnectModelAuth extends JModel {
 		
 		$validity=$availability && $notUsed && $timeValidity;
 		if($validity){
-			$sql="UPDATE #__jc_auth_key SET used=1 WHERE privateKey='$privateKey'";
+			$sql='UPDATE #__jc_auth_key SET used=1 WHERE privateKey='.
+				$this->_db->quote($privateKey);
 			$this->_db->Execute($sql);
 			if($this->_db->getErrorNum()) 
 				throw new Exception($this->_db->getErrorMsg());
