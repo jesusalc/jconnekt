@@ -1,0 +1,36 @@
+Elgg Integran
+---------------------------------
+
+Now JConnect is Fully Functioning....
+So It's time to intgrete Elgg to this....
+
+---------------
+How To
+---------------
+	01.First Try How Elgg works first(front end).. //26
+	02.Try to some plugins.... //26
+	03.Go trought the API //27
+	03.implements jconnect's 12 functions...//27,28,29
+	04.do host it to servers......//30,01 
+	
+	
+How Login Works...
+---------------------------
+	01.Calls the inbuilt authenticate & login function..
+	02.Creates Cookie called jc_elgg with the value of $_SESSION['code]
+	03.Delete the Cookie named Elgg which is the current session id...
+	04.Assume that all the cookie changes will be altered by the JConnect in the Joomla...
+	05.When the Elgg's page loads it will check the jc_sync cookie and loads the Session acordingly...
+	
+How Logout works
+----------------------
+	01.calls the Elgg's logout function 
+	02.delete jc_sync and Elgg cookies...
+	
+///handle cookies differently..... 
+ 01.Stop Automated handling...
+ 02.Do it manually..
+ 03.Stop cookie deletion @ joomla (do it only @ logout)...
+ 04.In Exapp set the cookie array to a session variable
+ 05.Then In login dump cookies...
+ 06.Others Do not..
