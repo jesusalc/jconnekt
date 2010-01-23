@@ -23,7 +23,7 @@ class ExternalUser{
 		$this->db=JFactory::getDBO();
 		$this->JID=$JID;
 		if($JID==null ) return;
-		$sql="SELECT * FROM #__jc_externalUsers WHERE JID=$JID";
+		$sql='SELECT * FROM #__jc_externalUsers WHERE JID='.(int)$JID;
 		$this->db->setQuery($sql);
 		$res=$this->db->loadObject();
 		if($this->db->getErrorNum()) throw new Exception($this->db->getErrorMsg());
@@ -36,23 +36,24 @@ class ExternalUser{
 	}
 
 	public function save(){
-		$sql="INSERT INTO #__jc_externalUsers (JID,ownerAppID,username,needSync) VALUES (".
-		"$this->JID,$this->ownerAppID,'$this->username',$this->needSync) ON DUPLICATE KEY UPDATE ".
-		"username=VALUES(username),ownerAppID=VALUES(ownerAppID),needSync=VALUES(needSync)";
+		$sql='INSERT INTO #__jc_externalUsers (JID,ownerAppID,username,needSync) VALUES ('.
+		(int)$this->JID.','.(int)$this->ownerAppID.','.
+		$this->db->quote($this->username).','.(int)$this->needSync.') ON DUPLICATE KEY UPDATE '.
+		'username=VALUES(username),ownerAppID=VALUES(ownerAppID),needSync=VALUES(needSync)';
 		$this->db->Execute($sql);
 		if($this->db->getErrorNum()) throw new Exception($this->db->getErrorMsg());
 
 	}
 
 	public function delete(){
-		$sql="DELETE FROM #__jc_externalUsers WHERE JID=$this->JID";
+		$sql='DELETE FROM #__jc_externalUsers WHERE JID='.(int)$this->JID;
 		$this->db->Execute($sql);
 		if($this->db->getErrorNum()) throw new Exception($this->db->getErrorMsg());
 	}
 
 	public static function  contains($userID){
 		$db = JFactory::getDBO();
-		$query = "SELECT eu.* FROM #__jc_externalUsers eu WHERE eu.JID=$userID";
+		$query = 'SELECT eu.* FROM #__jc_externalUsers eu WHERE eu.JID='.(int)$userID;
 
 		$db->setQuery($query);
 		$externalUser=$db->loadObject();
