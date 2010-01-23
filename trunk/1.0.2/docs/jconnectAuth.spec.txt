@@ -1,0 +1,47 @@
+NEW Authentication token procedure
+-------------------------------------
+1. Register ExApp with Joomla for the browser session (sending a redirect with appName)
+2. Joomla send a (token + user_state) and store it in DB and cookie or session
+3. ExApp validate it with it's private key and store it in the browser and take neccessory actions
+5. if some user action changes in Joomla or valid time exeeded that token will be discarded
+6. elgg can query for the token for it's existance
+7. if it's not there that means something has happens.
+8. Goto step 1 
+
+	If JConnekt Login is done using ExApp it'll send the token as a return
+	-------------------------------------------------------------------------
+	So then after that ExApp needs to continue from above step 3
+	
+	Joomla side modification
+	--------------------------
+	Make DB Changes
+	add plugin hooks for destroy tokens when user-action changing
+	Create endpoint actions (request_token,check_token,query)
+	
+	Elgg side modifcations
+	--------------------------
+	add a api method to validate_token,check_token and query
+	1. if there is no cookie saying jconnekt_token redirect browser to joomla to get a one
+	2. and validate_token with the joomla againts shared key 
+	3. if comes with login=true query with token and get neccessory details and do the login
+	4. keep on checking check_token for it's failure.
+	5. goto step 1
+	
+	
+	Backend Procedure
+	-----------------------
+	There are 2 types of Token. (Request Token and Access Token)
+	Request token shall be shared between apps and it'll be store in the cookie by Joomla!
+	Foreach exapp requesting registration following procedure will be executed
+		if the request token in the cookie we just get it
+		otherwise we create a request_token and put it to the cookie
+		generate the access token 
+		Put both access_token,request_token,timestamp,appID,userID (if logged in) to the DB
+		send the request_token to the browser 
+		
+	Reset When user action changes
+	-----------------------
+	if user logged in or logged out following will be done..
+	it'll get the request token and neutralized it.. (timestamp=0)
+	and delete the request token from the cookie..
+		

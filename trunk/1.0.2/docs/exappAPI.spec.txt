@@ -1,0 +1,24 @@
+ExApp API structure..
+--------------------------------
+ExApp API is in 2 forms...
+ 1.Function can be used by developer..(Joomla function,authentication)
+ 2.Functions need to be developed by developer.. (for exApp server..)
+ 
+2.Developer Functions...
+----------------------------
+Developers have to extend a class and implement those functions..
+3 classes tobe extends... basis of their work..
+ 1.JCUserSync - do the user-sync stuff..
+    *deleteUser
+    *getUserCount
+    *getUserDetails
+    *getUserGroups
+    *getUsers
+ 2.JCMisc
+    *getPrivateView
+    *getPublicView
+    *loadSysInfo
+ 3.JCAuth
+    *login
+    
+After creating those class developer has to go to api-folder and add these created classes to the JCFactory.. (can do this in settings.php)
