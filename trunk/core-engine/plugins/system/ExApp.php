@@ -146,7 +146,7 @@ class ExApp{
 	 */
 	private function sendRequest($endpoint,$action,$json){
 		$res;
-		if(function_exists('curl_init2')){
+		if(function_exists('curl_init')){
 			$ch = curl_init("$endpoint");
 			$params=urlencode("action").'='.urlencode($action)."&";
 			$params.=urlencode("json").'='.urlencode($json);
