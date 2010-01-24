@@ -6,7 +6,7 @@
 * @copyright	Arunoda Susiripala
 * @license 		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
 */
-include_once 'jconnect_api/api.php';
+include_once 'jconnekt_api/api.php';
 
 
 function jconnect_init(){ 
@@ -25,17 +25,12 @@ function jconnect_init(){
 	return true;
 }
 
-function jconnect_page_handler($page){
-	global $CONFIG;
-	if(strlen($page[0])>0) require_once($CONFIG->pluginspath . "elgg_jconnect/$page[0].php");
-	else require_once($CONFIG->pluginspath . "elgg_jconnect/jconnect_api/server.php");
-}
 
 function jconnect_pagesetup()
 {
 	if (get_context() == 'admin' && isadminloggedin()) {
 		global $CONFIG;
-		add_submenu_item(elgg_echo('JConnect Config'), $CONFIG->wwwroot . 'pg/jconnect/config');
+		add_submenu_item(elgg_echo('JConnect Config'), $CONFIG->wwwroot . 'mod/elgg_jconnekt/config.php');
 	}
 } 
 
@@ -55,13 +50,12 @@ register_elgg_event_handler('pagesetup','system','jconnect_pagesetup');
 //login using PAM
 
 function jconnect_logout($event,$obj_type,$user){
-	//clear the token
-	setcookie('jconnekt_request_token',0,null,"/");
-	unset($_COOKIE['jconnekt_request_token']);
-	
-	//logging out is done using a logout function provided by 
-	global $CONFIG;
-	JCFactory::getJConnect()->logout();	
+	//clear the token	
+	if(JCFactory::isJConnektSession()){
+		JCFactory::getJConnect()->deleteLocalToken();
+		JCFactory::getJConnect()->logout();
+		echo "Force Redirect";
+	}	
 }
 
 function jconnect_create_user($event,$obj_type,$user){
@@ -124,8 +118,12 @@ function jconnect_login($event,$obj_type,$user){
 	
 	try{
 		if(!$_SESSION['JC_LOGIN']){
-			JCFactory::getJoomla()->updateUser(
-			$user->username,$user->email,$_POST['password']);
+			$joomla=JCFactory::getJoomla();
+			if(isset($joomla)){
+				$joomla->updateUser
+					($user->username,$user->email,$_POST['password']);
+			}
+			
 		}
 		
 	}

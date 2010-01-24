@@ -41,6 +41,7 @@ function jconnekt_logout(){
 	if(JCFactory::isJConnektSession()){
 		JCFactory::getJConnect()->deleteLocalToken();
 		JCFactory::getJConnect()->logout();
+		exit(0);
 	}	
 }
 

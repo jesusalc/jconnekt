@@ -123,7 +123,6 @@ class ExApp{
 		$endpoint="http://{$this->host}:{$this->port}{$this->path}";
 		//$call=$endpoint."?&action=$action&json=".json_encode($paramArray);
 		$res=$this->sendRequest($endpoint,$action,json_encode($paramArray));
-		
 		$res=json_decode($res,true);
 		
 		if(isset($res) && $res['result']==0){
@@ -147,20 +146,20 @@ class ExApp{
 	private function sendRequest($endpoint,$action,$json){
 		$res;
 		if(function_exists('curl_init')){
-			$ch = curl_init("$endpoint");
+			$ch = curl_init("{$endpoint}?&action=$action&json=$json");
 			$params=urlencode("action").'='.urlencode($action)."&";
-			$params.=urlencode("json").'='.urlencode($json);
-			curl_setopt($ch, CURLOPT_POSTFIELDS,  $params);
+			$params.=urlencode("json").'='.urldecode($json);
 	        curl_setopt($ch, CURLOPT_HEADER, 0);
 	        curl_setopt($ch, CURLOPT_POST, 1);
+	        curl_setopt($ch, CURLOPT_FOLLOWLOCATION,TRUE);
 	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	        $res = stripcslashes(curl_exec($ch));       
+	        $res = stripcslashes(curl_exec($ch)); 
 	        curl_close($ch);
 	        
 		}
 		else{
-			@$res=file("{$endpoint}?&action=$action&json=$json");
-			@$res=stripslashes(implode("\n",$res));
+			$res=file("{$endpoint}?&action=$action&json=$json");
+			$res=stripslashes(implode("\n",$res));
 			
 		}
 		

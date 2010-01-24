@@ -41,14 +41,14 @@
 		<exclude name="**/.*" />
 		<exclude name="**/Test*" />
 	</fileset>
-	<fileset dir="${src}/exApps/elgg_jconnect" id="elggApp">
+	<fileset dir="${src}/exApps/elgg_jconnekt" id="elggApp">
 		<include name="**" />
 		<exclude name="**/.*" />
 		<exclude name="**/Test*" />
 	</fileset>
 
 	<fileset dir="${src}/exApps" id="elgg-dist">
-		<include name="elgg_jconnect/**" /> 
+		<include name="elgg_jconnekt/**" /> 
 		<exclude name="**/.svn" />
 		<exclude name="**/Test*" />
 	</fileset>
@@ -71,7 +71,7 @@
 		<copy todir="${joomla}/modules/mod_jconnect_activity">
 			<fileset refid="mod-activity" />
 		</copy>
-		<copy todir="${elgg}/mod/elgg_jconnect">
+		<copy todir="${elgg}/mod/elgg_jconnekt">
 			<fileset refid="elggApp" />
 		</copy>
 
@@ -90,7 +90,7 @@
 		<zip destfile="${src}/jconnect.zip">
 			<fileset refid="whole-comp" />
 		</zip>
-		<zip destfile="${src}/elgg_jconnect.zip">
+		<zip destfile="${src}/elgg_jconnekt.zip">
 			<fileset refid="elgg-dist" />
 		</zip> 
 	</target>

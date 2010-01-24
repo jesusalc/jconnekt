@@ -7,13 +7,7 @@
 * @license 		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
 */
 
-?>
-
-<div id='jconnekt_login_box'></div>
-<script type="text/javascript">
-	jconnekt.draw_login('jconnekt_login_box');
-</script>
-
-
-
-
+include_once 'lib.php';
+include_once 'settings.php';
+include_once 'Joomla.php';
+include_once 'jconnect.php';

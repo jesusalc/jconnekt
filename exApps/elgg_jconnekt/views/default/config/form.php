@@ -12,7 +12,7 @@
 	<h3><u>Information For JConnect</u></h3>
 	<ul>
 		<li><b>Host</b>: <?php echo getenv('HTTP_HOST');?></li>
-		<li><b>Path</b>: <?php echo str_replace("http://".getenv('HTTP_HOST'),"",$vars['url']);?>pg/jconnect</li>
+		<li><b>Path</b>: <?php echo str_replace("http://".getenv('HTTP_HOST'),"",$vars['url']);?>mod/elgg_jconnekt/server.php</li>
 		<li><b>Port</b>: <?php echo getenv('SERVER_PORT')?></li>
 	</ul>
 </div>
