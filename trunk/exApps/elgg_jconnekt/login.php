@@ -6,7 +6,7 @@
 * @copyright	Arunoda Susiripala
 * @license 		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
 */
-include_once 'jconnect_api/api.php';
+include_once 'jconnekt_api/api.php';
 
 if(true){
 
