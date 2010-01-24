@@ -138,8 +138,10 @@ class JconnectModelExapps_form extends JModel{
 		$exApp=new ExApp((int)$appID);
 		$groups=$exApp->getUserGroups();
 		$rtn=array();
-		foreach ($groups as $group){
-			$rtn["$group"]=$group;
+		if(is_array($groups) && count($groups) >0){
+			foreach ($groups as $group){
+				$rtn["$group"]=$group;
+			}
 		}
 		
 		return $rtn;
@@ -172,10 +174,13 @@ class JconnectModelExapps_form extends JModel{
 			$exApp=new ExApp((int)$appID);
 			$exAppGroups=$exApp->getUserGroups();
 			$mappings=array();
-			foreach ($exAppGroups as $group){
-				$userGruop=new JCGroupIn($appID,$group);
-				$joomlaGroup=($userGruop->joomlaGroup)?$userGruop->joomlaGroup:'Registered';
-				$mappings["$group"]=$joomlaGroup;
+			
+			if(is_array($exAppGroups) && count($exAppGroups) > 0){
+				foreach ($exAppGroups as $group){
+					$userGruop=new JCGroupIn($appID,$group);
+					$joomlaGroup=($userGruop->joomlaGroup)?$userGruop->joomlaGroup:'Registered';
+					$mappings["$group"]=$joomlaGroup;
+				}
 			}
 		
 			return $mappings;

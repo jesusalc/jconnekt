@@ -67,6 +67,7 @@ class JconnectModelToken extends JModel {
 		return true;	
 	}
 	
+	//generate token and stores in the cookie..
 	public function get_request_token(){
 		$request_token=$_COOKIE['jconnekt_token'];
 		if(!isset($request_token)){
