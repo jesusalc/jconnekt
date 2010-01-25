@@ -46,7 +46,7 @@
 		$wrappedform = elgg_view('input/form',array(
 														'body' => $form,
 														'method' => 'get',
-														'action' => $vars['url'] . "mod/elgg_jconnect/config.php"
+														'action' => $vars['url'] . "mod/elgg_jconnekt/config.php"
 										));
 										
 ?>
