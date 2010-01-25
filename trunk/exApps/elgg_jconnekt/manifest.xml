@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin_manifest>
 	<field key="author" value="Arunoda Susiripala" />
-	<field key="version" value="1.5" />
-	<field key="description" value="JConnect Plugin" />
-	<field key="website" value="http://jconnect.googlecode.com" />
+	<field key="version" value="1.6" />
+	<field key="description" value="JConnekt ExApp Plugin" />
+	<field key="website" value="http://jconnekt.org" />
 	<field key="copyright" value="Arunoda Susiripala" />
 	<field key="licence" value="GNU Public License version 2" />
-</plugin_manifest>
+	<field key="elgg_version" value="2009061701" />
+</plugin_manifest>                                   

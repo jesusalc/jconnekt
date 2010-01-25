@@ -30,7 +30,7 @@ function jconnect_pagesetup()
 {
 	if (get_context() == 'admin' && isadminloggedin()) {
 		global $CONFIG;
-		add_submenu_item(elgg_echo('JConnect Config'), $CONFIG->wwwroot . 'mod/elgg_jconnekt/config.php');
+		add_submenu_item(elgg_echo('JConnekt Config'), $CONFIG->wwwroot . 'mod/elgg_jconnekt/config.php');
 	}
 } 
 
