@@ -33,7 +33,7 @@ if($_GET['action']=='check_token'){
 	//made in user activities....
 	//so in the same domain we dont need to request following rest thing to check sso state
 	$rtn=array('valid'=>true);
-	if(isset($_COOKIE['jconnekt_token'])){
+	if(!JCFactory::isOnCrossDomain()){
 		$jconnekt_token=$_COOKIE['jconnekt_token'];
 		if($jconnekt_token!=$request_token) $rtn['valid']=false;
 	}
