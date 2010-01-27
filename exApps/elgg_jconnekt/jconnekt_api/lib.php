@@ -134,6 +134,25 @@ class JCFactory{
 		return false;
 	}
 	
+	public static function isOnCrossDomain(){
+		$joomla_data=parse_url(JCFactory::$joomla_url);
+		$app_data=parse_url(JCFactory::$api_url);
+		
+		//set the port for 80 if not assigned
+		if(!isset($joomla_data['port'])) $joomla_data['port']=80;
+		if(!isset($app_data['port'])) $app_data['port']=80;
+	
+		$onCross=false;
+		if($joomla_data['host']!=$app_data['host']){
+			$onCross=true;
+		}
+		else if($joomla_data['port']!=$app_data['port']){
+			$onCross=true;
+		}
+		
+		return $onCross;
+	}
+	
 	/**
 	 * 
 	 * This will load Javascript library getting all the parameters from the API
