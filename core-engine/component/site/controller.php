@@ -284,15 +284,25 @@ class Methods{
 	
 	/**
 		Query User information if logged in..
+		if the user is banned we send array['ban']=true;
 	 */
 	static function query($info){
 		$access_token=$info['access_token'];
+		$appName=$info['appName'];
 		$rtn=array();
 		if(Methods::validate_token($access_token)){
 			$model=JModel::getInstance("token","JConnectModel");
 			$data=$model->get($access_token);
 			$user=JUser::getInstance((int)$data->user_id);
 			$userGroup=null;
+			
+			//check user for he is banned or not!
+			$appID=JCHelper::getAppID($appName);
+			$syncUser=new SyncUser((int)$data->user_id,$appID);
+			if($syncUser->status=="BAN"){
+				$rtn=array("ban"=>true);
+				Endpoint::returnResult($rtn);
+			}
 			
 			//we are only sending userGroup for users not owned by current ExApp
 			if(!ExternalUser::contains($user->id)){

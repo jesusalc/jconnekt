@@ -4,26 +4,6 @@
  */
 include "api.php";
 
-function call_request($url){
-		$res;
-		if(function_exists('curl_init')){
-			$ch = curl_init($url);
-	        curl_setopt($ch, CURLOPT_HEADER, 0);
-	        curl_setopt($ch, CURLOPT_POST, 1);
-	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	        curl_setopt($ch, CURLOPT_FOLLOWLOCATION,TRUE);
-	        $res = curl_exec($ch);       
-	        curl_close($ch);
-	        
-		}
-		else{
-			$res=file($url);
-			$res=implode("\n",$res);
-			
-		}
-		
-		return $res;
-}
 
 //used in auto active single sign on
 if($_GET['action']=='check_token'){
@@ -60,19 +40,17 @@ else{
 	if($response['state']=="online"){
 		$joomla_url=JCFactory::getJConnect()->joomla_path;
 		$access_token=hash_hmac("md5",$response['request_token'],JCFactory::getAuthKey());
-		$url=$joomla_url . '?option=com_jconnect&action=query&json={"access_token":"'.$access_token.'"}';
-		$res=call_request($url);
-		$res=json_decode($res,true);
+				
+		$res=JCFactory::getJoomla()->query($access_token);
 		
-		$res=$res['data'];
+		//if queried user is not banned!
+		if(!(isset($res['ban']) && $res['ban']==true)){
+			//indicate that JConnekt session is started
+			//indicate jconnekt session is started
+			setcookie("JCONNEKT_SESSION",true,null,"/");
+			JCFactory::$auth->login(true,$res);	
+		}
 		
-		
-		
-		//indicate that JConnekt session is started
-		//indicate jconnekt session is started
-		setcookie("JCONNEKT_SESSION",true,null,"/");
-		
-		JCFactory::$auth->login(true,$res);
 	}else {
 		
 		JCFactory::$auth->logout();
