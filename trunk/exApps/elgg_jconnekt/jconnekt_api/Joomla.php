@@ -52,8 +52,23 @@ class Joomla{
 			'username'=>$username));  
 	}
 	
+	/**
+		check the access token created using request token for the validity
+		if the token available nothing has been changed in the user - level
+		otherwise something has happened
+	 */
 	public function check_token($access_token){
 		return $this->callMethod("check_token",array(
+			'access_token'=>$access_token
+		));
+	}
+	
+	/**
+		Query User information if logged in..
+		if the user is banned we send array['ban']=true;
+	 */
+	public function query($access_token){
+		return $this->callMethod("query",array(
 			'access_token'=>$access_token
 		));
 	}
