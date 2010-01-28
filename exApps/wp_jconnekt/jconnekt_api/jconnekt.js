@@ -42,14 +42,15 @@ function JConnekt(app_name,api_url,joomla_url,caller_url){
 		div.innerHTML="<iframe style='display:none' width=0 height=0 src='"+src_url+"'></iframe>";
 	};
 	
-	this.ajax_validator=function(div_name,url){
+	this.ajax_validator=function(div_name,url){	
+		
 		sso_div_name=div_name;
 		sso_current_url=url;
-		$(document).ready(function(){
-			check_token(null);
-		});
+		
+		check_token(null);
 	};
 }
+
 
 function popup_jconnekt(url,width,height){
 	var top=screen.height/2-height/2;

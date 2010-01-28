@@ -5,7 +5,7 @@
 	<property name="core" value="${src}/core-engine" />
 	<property name="joomla" value="../joomla" /> 
 	<property name="elgg" value="../elgg" /> 
-	<property name="dist" value="../dist" /> 
+	<property name="wp" value="../wp" /> 
 	<property name="extensionDir" value="${core}/component/admin/ext" />
 
 	<fileset dir="${src}" id="whole">
@@ -46,11 +46,21 @@
 		<exclude name="**/.*" />
 		<exclude name="**/Test*" />
 	</fileset>
+	<fileset dir="${src}/exApps/wp_jconnekt" id="wpApp">
+				<include name="**" />
+				<exclude name="**/.*" />
+				<exclude name="**/Test*" />
+	</fileset>
 
 	<fileset dir="${src}/exApps" id="elgg-dist">
 		<include name="elgg_jconnekt/**" /> 
 		<exclude name="**/.svn" />
 		<exclude name="**/Test*" />
+	</fileset>
+	<fileset dir="${src}/exApps" id="wp-dist">
+				<include name="wp_jconnekt/**" /> 
+				<exclude name="**/.svn" />
+				<exclude name="**/Test*" />
 	</fileset>
 
 	<!-- Copy Target -->
@@ -74,6 +84,9 @@
 		<copy todir="${elgg}/mod/elgg_jconnekt">
 			<fileset refid="elggApp" />
 		</copy>
+		<copy todir="${wp}/wp-content/plugins/wp_jconnekt">
+							<fileset refid="wpApp" />
+		</copy>
 
 	</target>
 	
@@ -92,6 +105,9 @@
 		</zip>
 		<zip destfile="${src}/elgg_jconnekt.zip">
 			<fileset refid="elgg-dist" />
+		</zip> 
+		<zip destfile="${src}/wp_jconnekt.zip">
+							<fileset refid="wp-dist" />
 		</zip> 
 	</target>
 

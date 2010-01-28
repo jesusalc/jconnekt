@@ -31,6 +31,7 @@ function draw_sso(){
 	}
 }
 
+
 function draw_login(){	
 	echo "<div id='jconnekt_login_box'></div>";
 	echo "<script type='text/javascript'>jconnekt.draw_login('jconnekt_login_box')</script>";
@@ -45,16 +46,15 @@ function jconnekt_logout(){
 	}	
 }
 
-
-
-function widget_jconnekt_login($args) {
+//widget is comming later
+/*function widget_jconnekt_login($args) {
 	  extract($args);
 	  echo $before_widget;
 	  echo $before_title;?>JConnekt Login<?php echo $after_title;
 	  
 	  echo "<div style='margin-top:6px'>";
 	  
-	  if(!JCFactory::isJConnektSession()){
+	  if(!is_user_logged_in()){
 		echo "<div id='jconnekt_login_box'></div>";
 		echo "<script type='text/javascript'>jconnekt.draw_login('jconnekt_login_box')</script>";
 	  }
@@ -62,14 +62,14 @@ function widget_jconnekt_login($args) {
 	  	$uri = wp_nonce_url( site_url("wp-login.php", 'login'), 'log-out' );
 	  	echo "<ul>";
 	  	echo "<li><a href='{$uri}&action=logout'>Logout</a></li>";
-	  	echo "<li><a href='"."http://localhost/jconnekt/wp/1.0.2/wp-admin/"."'>Site Admin</a></li>";
+	  	echo "<li><a href='".site_url("wp-admin/")."'>Site Admin</a></li>";
 		echo "</ul>";
 	  }
 	  
 	  echo "</div>";
 	  
 	  echo $after_widget;
-}
+}*/
 
 function jconnekt_init()
 {
