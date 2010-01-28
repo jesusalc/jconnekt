@@ -15,12 +15,13 @@ include_once dirname(dirname(__FILE__)).'/impl/auth.php';
 /**
  * Basic details...
  */
-JCFactory::register('secKey','xfrhBj9Ofu0X2J5WNBqIJDIGs1sKjG0T::3r6PusEdJDUNly4MRvHVjcwL5');
+JCFactory::register('secKey','nBBinshAGYNL6qwTix6Y4vCBbyiCc2ew::szURlCFgA0IBe90dHs3FIXfjk');
 JCFactory::register('appName','wp');
-JCFactory::register('joomla_url','http://localhost/jconnekt/joomla/1.0.2/');
-JCFactory::register('app_url','http://localhost/jconnekt/wp/1.0.2/');
-JCFactory::register('api_url','http://localhost/jconnekt/wp/1.0.2/wp-content/plugins/wp_jconnekt/jconnekt_api/');
+JCFactory::register('joomla_url','http://localhost/jconnekt/joomla');
+JCFactory::register('app_url','http://localhost/jconnekt/wp/');
+JCFactory::register('api_url','http://localhost/jconnekt/wp/wp-content/plugins/wp_jconnekt/jconnekt_api/');
 JCFactory::register('caller','jconnekt.php');
+
 
 
 /**

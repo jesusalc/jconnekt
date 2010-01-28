@@ -75,7 +75,6 @@ class JConnect{
 		$redirect_to=$this->joomla_path."/?option=com_jconnect&controller=auth&".
 			"task=logout&callback=$return_to";
 		header("Location: $redirect_to");
-		exit(0);
 	}
 	
 
@@ -184,3 +183,4 @@ class JConnect{
 	}
 
 }
+

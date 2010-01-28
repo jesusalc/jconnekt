@@ -52,11 +52,7 @@ class JCWPAuth extends JCAuth{
 		require_once(ABSPATH . WPINC . '/pluggable.php');
 		wp_clear_auth_cookie();
 		
-		//the application url
-		$url=JCFactory::$app_url;
-		
-		//redirect in auto Active SSO
-		$this->end_logout($url);
+		$this->end_logout(site_url(""));
 		return true;
 	}
 }

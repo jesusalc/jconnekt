@@ -52,14 +52,30 @@ class Joomla{
 			'username'=>$username));  
 	}
 	
+	/**
+		check the access token created using request token for the validity
+		if the token available nothing has been changed in the user - level
+		otherwise something has happened
+	 */
 	public function check_token($access_token){
 		return $this->callMethod("check_token",array(
 			'access_token'=>$access_token
 		));
 	}
 	
+	/**
+		Query User information if logged in..
+		if the user is banned we send array['ban']=true;
+	 */
+	public function query($access_token){
+		return $this->callMethod("query",array(
+			'access_token'=>$access_token
+		));
+	}
+	
 	
 	private function callMethod($action,$paramArray){
+		
 		//generating hash value and send-it...
 		$salt=substr(md5(rand()),0,25);
 		$hmac_hash=$this->hmac_gen($paramArray,$salt);
@@ -70,6 +86,7 @@ class Joomla{
 		
 		$res=$this->sendRequest($this->endpoint."?option=com_jconnect&format=raw&",$action,json_encode($paramArray));
 		$res=json_decode($res,true);
+		
 		if($res->result==0){
 			return $res['data'];
 		}
@@ -89,14 +106,14 @@ class Joomla{
 	private function sendRequest($endpoint,$action,$json){
 		$res;
 		if(function_exists('curl_init')){
-			$ch = curl_init("$endpoint");
+			$ch = curl_init("{$endpoint}?&action=$action&json=$json");
 			$params=urlencode("action").'='.urlencode($action)."&";
-			$params.=urlencode("json").'='.urlencode($json);
-			curl_setopt($ch, CURLOPT_POSTFIELDS,  $params);
+			$params.=urlencode("json").'='.urldecode($json);
 	        curl_setopt($ch, CURLOPT_HEADER, 0);
 	        curl_setopt($ch, CURLOPT_POST, 1);
+	        curl_setopt($ch, CURLOPT_FOLLOWLOCATION,TRUE);
 	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	        $res = stripcslashes(curl_exec($ch));       
+	        $res = stripcslashes(curl_exec($ch)); 
 	        curl_close($ch);
 	        
 		}
