@@ -114,7 +114,7 @@ class Methods{
 		try{
 			//decrypting the password...
 			$exApp=new ExApp($appName);
-			$password=AESDecryptCtr($password,$exApp->cryptKey,256);
+			//$password=AESDecryptCtr($password,$exApp->cryptKey,256);
 			
 			$appID=JCHelper::getAppID($appName);
 			//check for recursive_insert option
@@ -162,6 +162,8 @@ class Methods{
 		$password=$data['password'];
 		$group=$data['group'];
 		
+		
+		
 		$fault=authenticate($appName,$hmac_hash,array($username,$email,$password,$group),$data['salt']);
 		if(!is_bool($fault) || $fault==false){
 			Endpoint::returnException($fault->code,$fault->message);
@@ -200,7 +202,8 @@ class Methods{
 			
 			//decrypting the password...
 			$exApp=new ExApp($appName);
-			$password=AESDecryptCtr($password,$exApp->cryptKey,256);
+			//$password=AESDecryptCtr($password,$exApp->cryptKey,256);
+			
 			JCHelper::updateJoomlaUser($username,$email,$password,$aclGroup);
 
 			//if the password is a valid one update the exteralUsers needSync into 0

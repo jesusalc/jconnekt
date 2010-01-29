@@ -15,7 +15,7 @@ include_once dirname(dirname(__FILE__)).'/impl/auth.php';
 /**
  * Basic details...
  */
-JCFactory::register('secKey','nBBinshAGYNL6qwTix6Y4vCBbyiCc2ew::szURlCFgA0IBe90dHs3FIXfjk');
+JCFactory::register('secKey','sLjPHHtFxgdxKq3BwlKxKDgLSCGHnwdK::tAYuar5rx5qnY37n4i7Jt17R9');
 JCFactory::register('appName','wp');
 JCFactory::register('joomla_url','http://localhost/jconnekt/joomla');
 JCFactory::register('app_url','http://localhost/jconnekt/wp/');
