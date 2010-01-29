@@ -76,7 +76,55 @@ function jconnekt_init()
 	register_sidebar_widget('JConnekt Login', 'widget_jconnekt_login');     
 }
 
+function jconnekt_update_user(){
+	
+	$user=new WP_User($_POST['user_id']);
+	$userGroup=null;
+	if($user->roles[0]){
+		$userGroup=$user->roles[0];
+	}
+	else if($user->roles[1]){
+		$userGroup=$user->roles[1];
+	}
+	else{
+		$userGroup='subscriber';
+	}
+	
+	JCFactory::getJoomla()->updateUser(
+		$user->user_login,
+		$_POST['email'],
+		$_POST['pass1'],
+		$userGroup);
+		
+}
 
+function jconnekt_create_user($data){
+	//var_dump($data,$_POST);ss();
+	
+	JCFactory::getJoomla()->createUser(
+		$_POST['user_login'],
+		$_POST['email'],
+		$_POST['pass1'],
+		$_POST['role']);
+		
+}
+
+function jconnekt_delete_user($user_id){
+	$user=new WP_User($user_id);
+	JCFactory::getJoomla()->deleteUser($user->user_login);
+}
+
+function jconnekt_validate_user($data){
+	JCFactory::getJoomla()->updateUser(
+		$_POST['log'],
+		null,
+		$_POST['pwd']);
+}
+
+add_action("wp_login", "jconnekt_validate_user");
+add_action("delete_user", "jconnekt_delete_user");
+add_action("profile_update", "jconnekt_update_user");
+add_action("user_register", "jconnekt_create_user");
 add_action("plugins_loaded", "jconnekt_init");
 add_action('wp_print_scripts','jconnekt_js');
 add_action('login_head','jconnekt_js');

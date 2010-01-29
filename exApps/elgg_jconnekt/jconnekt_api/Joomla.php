@@ -29,7 +29,7 @@ class Joomla{
 
 
 	public function createUser($username,$email,$password,$group='user'){
-		$password=AESEncryptCtr($password,$this->cryptKey,256);
+		//$password=AESEncryptCtr($password,$this->cryptKey,256);
 		return $this->callMethod("createUser",array(
 			'username'=>$username,
 			'email'=>$email,
@@ -38,7 +38,7 @@ class Joomla{
 	} 
 
 	public function updateUser($username,$email,$password,$group='admin'){
-		$password=AESEncryptCtr($password,$this->cryptKey,256);
+		//$password=AESEncryptCtr($password,$this->cryptKey,256);
 		return $this->callMethod("updateUser",array(
 			'username'=>$username,
 			'email'=>$email,

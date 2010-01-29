@@ -22,7 +22,7 @@ if($_GET['action']=='check_token'){
 		$valid=JCFactory::getJoomla()->check_token($access_token);
 
 		//we check $valid's availability to fix looping page refreshes..
-		if(!$valid['valid']){
+		if($valid && !$valid['valid']){
 			//if($valid && !$valid['valid']){
 			$rtn['valid']=false;
 		}
