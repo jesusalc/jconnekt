@@ -44,7 +44,8 @@ else{
 		$res=JCFactory::getJoomla()->query($access_token);
 		
 		//if queried user is not banned!
-		if(!(isset($res['ban']) && $res['ban']==true)){
+		//and check whether username exists..
+		if((isset($res['username']))){
 			//indicate that JConnekt session is started
 			//indicate jconnekt session is started
 			setcookie("JCONNEKT_SESSION",true,null,"/");
