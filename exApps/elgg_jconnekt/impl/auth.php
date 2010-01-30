@@ -54,7 +54,10 @@ class JCElggAuth extends JCAuth{
 		return false;
 	}
 
+	//if the user is not logout we shlould not do this..
+	//it'll affect the autoactive user-sync
 	public function logout(){
+		
 		global $CONFIG;
 
 		if (isset($_SESSION['user'])) {

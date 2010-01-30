@@ -59,11 +59,14 @@ function popup_jconnekt(url,width,height){
 	window.open(url,'Login','left='+left+',scrollbars=no,menubar=no,height=600,width=800,resizable=yes,toolbar=no,location=no,status=no');
 }
 
+var last_state=null;
 function check_token(data){
+	
 	if(data){
 		var res;
 		eval('res=' + data);
-		if(!res.valid){
+		
+		if(res.valid==false){
 			jconnekt_ref.draw_sso(sso_div_name,sso_current_url);
 		}
 		setTimeout("check_token(null)",5000);

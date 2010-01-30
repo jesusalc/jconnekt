@@ -49,6 +49,7 @@ class JCWPAuth extends JCAuth{
 	}
 
 	public function logout(){
+		if(!is_user_logged_in()) return;
 		require_once(ABSPATH . WPINC . '/pluggable.php');
 		wp_clear_auth_cookie();
 		

@@ -20,9 +20,9 @@ if($_GET['action']=='check_token'){
 	else{
 		$access_token=hash_hmac("md5",$request_token,JCFactory::getAuthKey());
 		$valid=JCFactory::getJoomla()->check_token($access_token);
-
+		
 		//we check $valid's availability to fix looping page refreshes..
-		if($valid && !$valid['valid']){
+		if($valid && $valid['valid']===false){
 			//if($valid && !$valid['valid']){
 			$rtn['valid']=false;
 		}
@@ -45,7 +45,7 @@ else{
 		$res=JCFactory::getJoomla()->query($access_token);
 
 		//if queried user is not banned!
-		if(!(isset($res['ban']) && $res['ban']==true)){
+		if(isset($res['username'])){
 			//indicate that JConnekt session is started
 			//indicate jconnekt session is started
 			setcookie("JCONNEKT_SESSION",true,null,"/");
