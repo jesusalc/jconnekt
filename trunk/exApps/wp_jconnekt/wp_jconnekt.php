@@ -121,6 +121,15 @@ function jconnekt_validate_user($data){
 		$_POST['pwd']);
 }
 
+
+function jconnekt_config_menu() {
+	add_options_page("JConnekt Config", "JConnekt Config", 1, "JConnekt Config", "jconnekt_config_view");  
+}
+
+function jconnekt_config_view() {
+  include('jconnekt_config.php');
+}
+
 add_action("wp_login", "jconnekt_validate_user");
 add_action("delete_user", "jconnekt_delete_user");
 add_action("profile_update", "jconnekt_update_user");
@@ -131,3 +140,4 @@ add_action('login_head','jconnekt_js');
 add_action('loop_start','draw_sso');
 add_action('login_form','draw_login');
 add_action('wp_logout','jconnekt_logout');
+add_action('admin_menu', 'jconnekt_config_menu');

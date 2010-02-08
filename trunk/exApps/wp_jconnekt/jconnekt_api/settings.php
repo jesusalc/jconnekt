@@ -15,11 +15,19 @@ include_once dirname(dirname(__FILE__)).'/impl/auth.php';
 /**
  * Basic details...
  */
-JCFactory::register('secKey','sLjPHHtFxgdxKq3BwlKxKDgLSCGHnwdK::tAYuar5rx5qnY37n4i7Jt17R9');
-JCFactory::register('appName','wp');
-JCFactory::register('joomla_url','http://localhost/jconnekt/joomla');
-JCFactory::register('app_url','http://localhost/jconnekt/wp/');
-JCFactory::register('api_url','http://localhost/jconnekt/wp/wp-content/plugins/wp_jconnekt/jconnekt_api/');
+
+$secret_key=get_option('jconnekt_secret_key');
+$app_name=get_option('jconnekt_app_name');
+$joomla_url=get_option('jconnekt_joomla_url');
+$wp_url=site_url();
+
+if(substr($wp_url,strlen($wp_url)-1,1)!='/') $wp_url.="/";
+		
+JCFactory::register('secKey',$secret_key);
+JCFactory::register('appName',$app_name);
+JCFactory::register('joomla_url',$joomla_url);
+JCFactory::register('app_url',$wp_url);
+JCFactory::register('api_url',$wp_url.'wp-content/plugins/wp_jconnekt/jconnekt_api/');
 JCFactory::register('caller','jconnekt.php');
 
 
