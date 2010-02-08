@@ -28,7 +28,7 @@ JCFactory::register('appName',$app_name);
 JCFactory::register('joomla_url',$joomla_url);
 JCFactory::register('app_url',$wp_url);
 JCFactory::register('api_url',$wp_url.'wp-content/plugins/wp_jconnekt/jconnekt_api/');
-JCFactory::register('caller','jconnekt.php');
+JCFactory::register('caller','?jconnekt=1');
 
 
 

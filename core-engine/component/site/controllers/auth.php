@@ -22,9 +22,22 @@ class JconnectControllerAuth extends JController{
 		parent::__construct();
 	}
 
-	function display(){
+	//this will get the callback in correct format
+	//http://localhost/?aa=i?aa=20
+	private function get_callback(){
 		
 		$callback=JRequest::getVar('return_to');
+		
+		$callback=str_replace("?","&",$callback);
+		
+		$last_one=strpos($callback,"&");
+		$callback=substr($callback,0,$last_one).'?' .substr($callback,$last_one+1);
+	
+		return $callback;
+	}
+	
+	function display(){
+		$callback=$this->get_callback();
 		$appName=JRequest::getVar('app_name');
 		$session=JFactory::getSession();
 
