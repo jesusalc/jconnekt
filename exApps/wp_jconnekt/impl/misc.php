@@ -19,8 +19,8 @@ class JCElggMisc extends JCMisc{
 	
 	public function loadSysInfo($meta){
 		
-		//if(isset($meta['JOOMLA_URL'])) datalist_set('joomla_url',$meta['JOOMLA_URL']."");
-		//if(isset($meta['JC_APPNAME'])) datalist_set('appName',$meta['JC_APPNAME']."");
+		if(isset($meta['JOOMLA_URL'])) update_option('jconnekt_joomla_url',$meta['JOOMLA_URL']."");
+		if(isset($meta['JC_APPNAME'])) update_option('jconnekt_app_name',$meta['JC_APPNAME']."");
 		
 	}
 }
