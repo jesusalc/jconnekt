@@ -69,11 +69,15 @@ function jconnekt_logout(){
 	  echo "</div>";
 	  
 	  echo $after_widget;
-}*/
+}*/ 
 
 function jconnekt_init()
 {
-	register_sidebar_widget('JConnekt Login', 'widget_jconnekt_login');     
+	register_sidebar_widget('JConnekt Login', 'widget_jconnekt_login'); 
+	if(isset($_GET['jconnekt'])){
+		require  "wp-content/plugins/wp_jconnekt/jconnekt_api/router.php";	
+		exit(0);
+	}    
 }
 
 function jconnekt_update_user(){
