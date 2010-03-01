@@ -30,8 +30,11 @@ class JconnectControllerAuth extends JController{
 		
 		$callback=str_replace("?","&",$callback);
 		
+		//make the first & into ?
 		$last_one=strpos($callback,"&");
-		$callback=substr($callback,0,$last_one).'?' .substr($callback,$last_one+1);
+		if($last_one){
+			$callback=substr($callback,0,$last_one).'?' .substr($callback,$last_one+1);	
+		}
 	
 		return $callback;
 	}
@@ -188,7 +191,7 @@ class JconnectControllerAuth extends JController{
 			unset($_COOKIE['jconnekt_token']);
 		}
 			
-		$return_to=JFactory::getSession()->get('callback','','jconnect.auth');		
+		$return_to=JFactory::getSession()->get('callback','','jconnect.auth');	
 		try{
 			$exApp=new ExApp($appName);
 			$model=JModel::getInstance("token","JConnectModel");
