@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JConnect" basedir="." default="package">
+
+	<property name="src" value="." />
+	<property name="core" value="${src}/core-engine" />
+	<property name="joomla" value="../joomla" /> 
+	<property name="elgg" value="../elgg" /> 
+	<property name="wp" value="../wp" /> 
+	<property name="extensionDir" value="${core}/component/admin/ext" />
+
+	<fileset dir="${src}" id="whole">
+		<include name="**" />
+		<exclude name="**/.*" />
+		<exclude name="**/Test*" />
+	</fileset>
+	<fileset dir="${core}/component" id="whole-comp">
+		<include name="**" />
+		<exclude name="**/.*" />
+		<exclude name="**/Test*" />
+	</fileset>   
+	<fileset dir="${core}/component/admin" id="admin-comp">
+		<include name="**" />
+		<exclude name="**/.*" />  
+		<exclude name="**/Test*" />
+	</fileset> 
+	<fileset dir="${core}/component/site" id="site-comp">
+		<include name="**" />
+		<exclude name="**/Test*" /> 
+	</fileset>
+	<fileset dir="${core}/plugins/user" id="user-plugin">
+		<include name="**" />
+		<exclude name="**/Test*" />
+	</fileset>
+	<fileset dir="${core}/plugins/system" id="system-plugin">
+		<include name="**" />
+		<exclude name="**/.*" />
+		<exclude name="**/Test*" />
+	</fileset>
+	<fileset dir="${core}/modules/activity" id="mod-activity">
+		<include name="**" />
+		<exclude name="**/.*" />
+		<exclude name="**/Test*" />
+	</fileset>
+	<fileset dir="${src}/exApps/elgg_jconnekt" id="elggApp">
+		<include name="**" />
+		<exclude name="**/.*" />
+		<exclude name="**/Test*" />
+	</fileset>
+	<fileset dir="${src}/exApps/wp_jconnekt" id="wpApp">
+				<include name="**" />
+				<exclude name="**/.*" />
+				<exclude name="**/Test*" />
+	</fileset>
+
+	<fileset dir="${src}/exApps" id="elgg-dist">
+		<include name="elgg_jconnekt/**" /> 
+		<exclude name="**/.svn" />
+		<exclude name="**/Test*" />
+	</fileset>
+	<fileset dir="${src}/exApps" id="wp-dist">
+				<include name="wp_jconnekt/**" /> 
+				<exclude name="**/.svn" />
+				<exclude name="**/Test*" />
+	</fileset>
+
+	<!-- Copy Target -->
+	<target name="copy_to_test" description="copy target" >
+		<echo>Copying files from Development to Testing Environment...</echo>
+		<copy todir="${joomla}/administrator/components/com_jconnect">
+			<fileset refid="admin-comp" />
+		</copy>
+		<copy todir="${joomla}/components/com_jconnect">
+			<fileset refid="site-comp" />
+		</copy>
+		<copy todir="${joomla}/plugins/user">
+			<fileset refid="user-plugin" />
+		</copy>
+		<copy todir="${joomla}/plugins/system">
+			<fileset refid="system-plugin" />
+		</copy>
+		<copy todir="${joomla}/modules/mod_jconnect_activity">
+			<fileset refid="mod-activity" />
+		</copy>
+		<copy todir="${elgg}/mod/elgg_jconnekt">
+			<fileset refid="elggApp" />
+		</copy>
+		<copy todir="${wp}/wp-content/plugins/wp_jconnekt">
+							<fileset refid="wpApp" />
+		</copy>
+
+	</target>
+	
+	<target name="package" description="Create the package from the Source" depends='copy_to_test'>
+		<zip destfile="${extensionDir}/user.zip">
+			<fileset refid="user-plugin" />
+		</zip>
+		<zip destfile="${extensionDir}/system.zip">
+			<fileset refid="system-plugin" />
+		</zip>
+		<zip destfile="${extensionDir}/activity.zip">
+			<fileset refid="mod-activity" />
+		</zip>
+		<zip destfile="${src}/jconnect.zip">
+			<fileset refid="whole-comp" />
+		</zip>
+		<zip destfile="${src}/elgg_jconnekt.zip">
+			<fileset refid="elgg-dist" />
+		</zip> 
+		<zip destfile="${src}/wp_jconnekt.zip">
+							<fileset refid="wp-dist" />
+		</zip> 
+	</target>
+
+</project>
