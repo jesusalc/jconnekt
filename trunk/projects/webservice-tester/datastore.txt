@@ -1,6 +1,0 @@
-'the_id'::['value','message']
-'value_recieve'
-'the_id'::['value','message']
-'value_recieve'
-'the_id'::['value','message']
-'value_recieve'
