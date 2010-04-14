@@ -1,8 +1,0 @@
-Installer For JConnect
----------------------------------
-
-1.Create install.php file and test
-2.Create uninstall.php file and test
-3.create admin menus for JConnect
-4.create the package and install and uninstall (test)
-5.create bash script to create the package
