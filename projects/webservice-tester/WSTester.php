@@ -21,14 +21,30 @@ class WSTester{
 		$this->sendRequest($this->dataStore,json_encode($params));
 	}
 
-	public function assertLocalTrue($value,$message){
+	public function assertResponse($value){
+		$params=array
+		(
+			'method'=>'store_response_recieve',
+			'value'=>$value,
+		);
 
+		$this->sendRequest($this->dataStore,json_encode($params));
 	}
 
 	public function dump($value){
 		$params=array
 		(
 			'method'=>'store_recieve',
+			'value'=>$value,
+		);
+
+		$this->sendRequest($this->dataStore,json_encode($params));
+	}
+	
+	public function dumpResponse($value){
+		$params=array
+		(
+			'method'=>'store_response_send',
 			'value'=>$value,
 		);
 
@@ -72,20 +88,31 @@ class WSTester{
 		$response=$this->sendRequest($this->dataStore,json_encode(array('method'=>'store_pop')));
 		 
 		$tests=json_decode(urldecode($response),true);
-		 
+		//var_dump($tests);
 		$this->displayResultTopic();
 		 
 		//initiate summary;
 		$this->summary=array('passed'=>0,'failed'=>0);
 		 
 		foreach ($tests as $testItem){
-			if($testItem['value_send']==$testItem['value_received']){
-				$this->summary['passed']++;
-				$this->displaySuccess($testItem);
+			$failed=false;
+			$request_failed=false;
+			$response_failed=false;
+			if($testItem['value_send']!=$testItem['value_received']){
+				$request_failed=true;
+			}
+			
+			if($testItem['value_response_send']!=$testItem['value_response_received']){
+				$response_failed=true;
+			}
+			
+			if($request_failed || $response_failed) {
+				$this->summary['failed']++;
+				$this->displayFailure($testItem,$request_failed,$response_failed);
 			}
 			else{
-				$this->summary['failed']++;
-				$this->displayFailure($testItem);
+				$this->summary['passed']++;
+				$this->displaySuccess($testItem);
 			}
 		}
 		 
@@ -95,7 +122,7 @@ class WSTester{
 
 	private function displayExecute($method){
 		$str= 'executing '.substr($method,4) .'...<br>';
-		echo '<div style="background-color:orange;color:white;padding:10px">'.
+		echo '<div style="color:rgb(100,100,100);padding:1px">'.
 		$str.
     	'</div>';
 	}
@@ -107,14 +134,26 @@ class WSTester{
     	'</div>';
 	}
 
-	private function displayFailure($testItem){
-		$str=substr($testItem['id'],4).' failed!'.
-    		' [  '.$testItem['message']. '  ]<br>'. 
-    		'sent:: '.$testItem['value_send'].'<br>'.
-    		'recieved:: '.$testItem['value_received'];
-		echo '<div style="background-color:red;color:white;padding:10px">'.
-		$str.
-    	'</div>';	
+	private function displayFailure($testItem,$request,$response){
+		$requestStr=substr($testItem['id'],4).' failed! [ REQUEST ]'.
+	    		' [  '.htmlentities($testItem['message']). '  ]<br>'. 
+	    		'sent:: '.htmlentities($testItem['value_send']).'<br>'.
+	    		'recieved:: '.htmlentities($testItem['value_received']);
+		
+		$responseStr=substr($testItem['id'],4).' failed! [ RESPONSE ]'.
+    		' [  '.htmlentities($testItem['message']). '  ]<br>'. 
+    		'sent:: '.htmlentities($testItem['value_response_send']).'<br>'.
+    		'recieved:: '.htmlentities($testItem['value_response_received']);
+		
+	 	echo '<div style="background-color:red;color:white;padding:10px">';
+	 	if($request){
+	 		echo '<div style="width:50%;float:left;background-color:pink;color:black">'.$requestStr.'</div>';
+	 	}
+	 	
+		if($response){
+	 		echo '<div style="width:50%;float:left;background-color:purple;">'.$responseStr.'</div>';
+	 	}
+	 	echo '<div style="clear:both"></div></div>';			
 	}
 
 	private function displayResultTopic(){
