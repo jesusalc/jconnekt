@@ -35,29 +35,50 @@
 function store_send($id,$value,$message){
 	$file=fopen('datastore.txt','a');
 	$data=array($value,$message);
-	$storeStr=$id . '::'. $value . '::'.$message;
+	$storeStr="\n".$id . '::'. $value . '::'.$message;
 	fwrite($file,$storeStr);
 	fclose($file);
 }
 
 function store_recieve($value){
 	$file=fopen('datastore.txt','a');
-	fwrite($file,'::'.$value."\n");
+	fwrite($file,'::'.$value);
+	fclose($file);
+}
+
+function store_response_send($value){
+	$file=fopen('datastore.txt','a');
+	fwrite($file,'::'.$value);
+	fclose($file);
+}
+
+function store_response_recieve($value){
+	$file=fopen('datastore.txt','a');
+	fwrite($file,'::'.$value);
 	fclose($file);
 }
 
 function store_pop(){
 	$content=file('datastore.txt'); 
 	$rtn=array();
-	foreach ($content as $line){
+	foreach ($content as $n=>$line){
+		if($n==0)continue; //remove first endline
+		if(substr($line,-1,1)=="\n") $line=substr($line,0,-1); //remove endline @each line
 		$pragments=explode("::",$line);
-		$rtn[]=array
+		$index=count($rtn);
+		$rtn[$index]=array
 		(
 			'id'=>$pragments[0],
 			'value_send'=>$pragments[1],
-			'value_received'=>substr($pragments[3],0,-1), //inorder to remove last endline
+			'value_received'=>$pragments[3], //inorder to remove last endline
 			'message'=>$pragments[2]
 		);
+		
+		//add response details if both dump and assert done in response
+		if(isset($pragments[4]) && isset($pragments[5])) {
+			$rtn[$index]['value_response_send']=$pragments[4];
+			$rtn[$index]['value_response_received']=$pragments[5];
+		}
 	}
 	
 	//deleting the store
@@ -85,6 +106,14 @@ else if($action['method']=='store_recieve'){
 else if($action['method']=='store_pop'){
 //	echo "pop<hr/>";
 	store_pop($action['value']);
+}
+else if($action['method']=='store_response_send'){
+//	echo "pop<hr/>";
+	store_response_send($action['value']);
+}
+else if($action['method']=='store_response_recieve'){
+//	echo "pop<hr/>";
+	store_response_recieve($action['value']);
 }
 
 //echo '<hr/>';
