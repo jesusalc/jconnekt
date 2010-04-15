@@ -10,12 +10,12 @@ class Usage extends WSTester{
 	}
 	
 	public function testCorrectOne(){
-		$this->assertTrue('abc','This is a Correct One');
+		$this->assertSame('abc','This is a Correct One');
 		$this->ws->correctOne();
 	}
 
 	public function testIncorrectOne(){
-		$this->assertTrue('abc2','This is the Incorrect One');
+		$this->assertSame('abc','This is the Incorrect One');
 		$this->ws->incorrectOne();
 	}
 }
