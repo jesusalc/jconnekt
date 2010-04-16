@@ -32,6 +32,8 @@
  */
 
 
+
+
 function store_send($id,$value,$message){
 	$file=fopen('datastore.txt','a');
 	$data=array($value,$message);
@@ -58,7 +60,7 @@ function store_response_recieve($value){
 	fclose($file);
 }
 
-function store_pop(){
+function store_pop($callback){
 	$content=file('datastore.txt'); 
 	$rtn=array();
 	foreach ($content as $n=>$line){
@@ -86,10 +88,19 @@ function store_pop(){
 	fwrite($file,'');
 	fclose($file);
 	
-	echo urlencode(json_encode($rtn));
+	//look for jsonp ajax requests.
+	if(isset($callback)){
+		$json=json_encode($rtn);
+		echo "$callback($json)";
+	}
+	else{
+		echo urlencode(json_encode($rtn));
+	}
 }
 
 $action=$_GET['action'];
+//the jsonp callback
+$callback=$_GET['callback']; 
 //var_dump($action);
 $action=json_decode(stripslashes($action),true);
 
@@ -105,7 +116,7 @@ else if($action['method']=='store_recieve'){
 }
 else if($action['method']=='store_pop'){
 //	echo "pop<hr/>";
-	store_pop($action['value']);
+	store_pop($callback);
 }
 else if($action['method']=='store_response_send'){
 //	echo "pop<hr/>";
