@@ -37,26 +37,26 @@
 function store_send($id,$value,$message){
 	$file=fopen('datastore.txt','a');
 	$data=array($value,$message);
-	$storeStr="\n".$id . '::'. $value . '::'.$message;
+	$storeStr="\n".$id . '~'. $value . '~'.$message;
 	fwrite($file,$storeStr);
 	fclose($file);
 }
 
 function store_recieve($value){
 	$file=fopen('datastore.txt','a');
-	fwrite($file,'::'.$value);
+	fwrite($file,'~'.$value);
 	fclose($file);
 }
 
 function store_response_send($value){
 	$file=fopen('datastore.txt','a');
-	fwrite($file,'::'.$value);
+	fwrite($file,'~'.$value);
 	fclose($file);
 }
 
 function store_response_recieve($value){
 	$file=fopen('datastore.txt','a');
-	fwrite($file,'::'.$value);
+	fwrite($file,'~'.$value);
 	fclose($file);
 }
 
@@ -66,7 +66,7 @@ function store_pop($callback){
 	foreach ($content as $n=>$line){
 		if($n==0)continue; //remove first endline
 		if(substr($line,-1,1)=="\n") $line=substr($line,0,-1); //remove endline @each line
-		$pragments=explode("::",$line);
+		$pragments=explode("~",$line);
 		$index=count($rtn);
 		$rtn[$index]=array
 		(

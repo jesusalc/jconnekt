@@ -4,6 +4,10 @@ class WSTester{
 	private $dataStore;
 	private $id=10;
 	private $summary;
+	/**
+	 * 
+	 * @var WSTester
+	 */
 	public static $tester;
 	public function __construct($dataStore){
 		$this->dataStore=$dataStore;
@@ -76,11 +80,19 @@ class WSTester{
 		$this->displayHeading();
 		 
 		$methods=get_class_methods($this);
+		//setUp,tearDown support
+		$isSetUp=(array_search("setUp",$methods)===false)?false:true;
+		$isTearDown=(array_search("tearDown",$methods)===false)?false:true;
+		
 		foreach ($methods as $method){
 			if(substr($method,0,4)=='test'){
 				//setting up the id
 				$this->id=$method;
-				$this->$method();
+				
+				if($isSetUp) $this->setUp(); //invoke Setup
+				$this->$method(); //invoke the method
+				if($isTearDown) $this->tearDown(); //invoke TearDown
+				
 				$this->displayExecute($method);
 			}
 		}
@@ -91,7 +103,19 @@ class WSTester{
 		//var_dump($tests);
 		$this->displayResultTopic();
 		 
-		//initiate summary;
+		//evaluate tests
+		$this->evalTestResults($tests);
+		 
+		//display summary
+		$this->displaySummary();
+	}
+	
+	/**
+	 * Evaluate test results
+	 * @param $tests as an array
+	 */
+	private function evalTestResults($tests){
+	//initiate summary;
 		$this->summary=array('passed'=>0,'failed'=>0);
 		 
 		foreach ($tests as $testItem){
@@ -115,9 +139,6 @@ class WSTester{
 				$this->displaySuccess($testItem);
 			}
 		}
-		 
-		//display summary
-		$this->displaySummary();
 	}
 
 	private function displayExecute($method){
@@ -176,10 +197,16 @@ class WSTester{
 	public static function setStore($datastore){
 		WSTester::$tester=new WSTester($datastore);
 	}
-
+	
+	/**
+	 * Get the singleton object
+	 * @return WSTester 
+	 */
 	public static function instance(){
-		return WSTester::$tester;
+		if(!isset(WSTester::$tester)) throw new Exception("setStore first");
+		return WSTester::$instance;
 	}
+
 }
 
 
