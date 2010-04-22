@@ -35,6 +35,7 @@ class StandardInvokerTest extends PHPUnit_Framework_TestCase{
 	public function testBasicInvoke(){
 		$id=$this->invoker->invoke("UserSync::createUser",array("u","p","e"));
 		$this->assertNotNull($id);
+
 		$response=$this->invoker->getResponse($id);
 		$this->assertNotNull($response,"UserSync::createUser");
 	}
@@ -101,6 +102,28 @@ class StandardInvokerTest extends PHPUnit_Framework_TestCase{
 	public function testGettingIdForNotifications(){
 		$id=$this->invoker->invoke("MuBlog::addStatus",array("a","a"));
 		$this->assertNull($id);
+		
+		try{
+			$resp=$this->invoker->getResponse($id);
+		}
+		catch(Exception $ex){
+			$this->assertSame($ex->getMessage(),"invalid method id");
+			return;
+		}
+		
+		$this->fail("There shouldn't any return for notifications");
+	}
+	
+	public function testGettingExceptionByMethod(){
+		try{
+			$id=$this->invoker->invoke("MuBlog::addStatus",array(null,null));
+		}
+		catch(Exception $ex){
+			$this->assertSame($ex->getMessage(),"params null exception");
+			return;
+		}
+		
+		$this->fail("Does not generates errors if method put a error");
 	}
 
 	private function getDef(){

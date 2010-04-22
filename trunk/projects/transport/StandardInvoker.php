@@ -58,7 +58,8 @@ class StandardInvoker extends Invoker{
 	public function getResponse($id){
 		//check whether id is a valid array index
 		//if the response is a error throw the exception
-		if(!isset($this->responses[$id])){
+		
+		if(!isset($id) || !array_key_exists($id,$this->responses)){
 			throw new Exception("invalid method id");
 		}
 		
@@ -150,10 +151,14 @@ class StandardInvoker extends Invoker{
 	 * and throws exception any error occured
 	 */
 	private function handleResponse($response){
+		//if response is not provided that's a notification
+		//so we don't handle it.
+		if(!isset($response) || $response=="") return;
 		
 		$rpc=json_decode(stripslashes($response),true);
 		if(isset($rpc['error'])) throw new Exception($rpc['error']);
 		
+				
 		$this->responses[$rpc['id']]=$rpc['result'];
 	}
 }
